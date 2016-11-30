@@ -6,9 +6,9 @@ import pytest
 from request_fixtures import *
 
 
-os.environ['LAZYSUSAN_SESSION_STORAGE_BACKEND'] = 'memory'
-os.environ['LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME'] = 'test'
-os.environ['LAZYSUSAN_SESSION_AWS_REGION'] = 'us-dummy-1'
+os.environ["LAZYSUSAN_SESSION_STORAGE_BACKEND"] = "memory"
+os.environ["LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME"] = "test"
+os.environ["LAZYSUSAN_SESSION_AWS_REGION"] = "us-dummy-1"
 
 CWD = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(CWD)

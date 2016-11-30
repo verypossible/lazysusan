@@ -60,7 +60,6 @@ def build_audio_request(request_type, offset_in_ms=0, token="test", player_activ
     request["request"].update({
         "offsetInMilliseconds": offset_in_ms,
         "token": token,
-        #"type": "AudioPlayer.PlaybackFinished"
         "type": request_type,
     })
     request["context"]["AudioPlayer"].update({
