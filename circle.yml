@@ -1,0 +1,9 @@
+dependencies:
+  pre:
+    - pip install pytest pytest-cov pytest-mock boto3
+
+test:
+  override:
+    - py.test --cov=lazysusan --cov-report=html tests/
+  post:
+    - cp -r htmlcov/* $CIRCLE_ARTIFACTS/
