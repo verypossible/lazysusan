@@ -16,16 +16,16 @@ class Memory(dict):
 
 class DynamoDB(dict):
 
-    TABLE_NAME = os.environ["LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME"]
-    AWS_REGION = os.environ["LAZYSUSAN_SESSION_AWS_REGION"]
-
     def __init__(self, *args, **kwargs):
         self._db = None
 
     def connect(self, **kwargs):
+        table_name = os.environ["LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME"]
+        aws_region = os.environ["LAZYSUSAN_SESSION_AWS_REGION"]
+
         if not self._db:
-            self._db = boto3.resource("dynamodb", region_name=self.AWS_REGION)
-            self._table = self._db.Table(self.TABLE_NAME)
+            self._db = boto3.resource("dynamodb", region_name=aws_region)
+            self._table = self._db.Table(table_name)
 
             data = self._table.get_item(Key=kwargs)
             record = data.get('Item', {})
