@@ -41,14 +41,53 @@ initialState:
     AMAZON.YesIntent: !!python/name:callbacks.dad_joke
     default: initialState
 
+billPath:
+  response:
+    card:
+      type: Simple
+      title: Bill Brock
+      content: >
+        Hold on, let me go check with Bill Brock.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          Hold on, let me go check with Bill Brock.
+          <break time="1s" />
+          Would you like to hear another joke?
+        </speak>
+    shouldEndSession: False
+
+calendarPath:
+  response:
+    card:
+      type: Simple
+      title: Printing Calendars
+      content: >
+        I used to have a job printing calendars, but I got fired.
+        I took a few days off.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          I used to have a job printing calendars, but I got fired.
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          I took a few days off.
+          <break time="1s" />
+          Would you like to hear another joke?
+        </speak>
+    shouldEndSession: False
+
 chickenPath:
   response:
     card:
       type: Simple
-      title: Chicken Coops
+      title: Clydesdale
       content: >
-        Why do chicken coops only have two doors? Because if they had four,
-        they would be chicken sedans.
+        Why do chicken coops only have two doors?
+        Because if they had four, they would be chicken sedans.
     outputSpeech:
       type: SSML
       ssml: >
@@ -58,8 +97,10 @@ chickenPath:
           Wait for it.
           <break time="1s" />
           Because if they had four, they would be chicken sedans.
+          <break time="1s" />
+          Would you like to hear another joke?
         </speak>
-    shouldEndSession: True
+    shouldEndSession: False
 
 clydesdalePath:
   response:
@@ -78,8 +119,10 @@ clydesdalePath:
           Wait for it.
           <break time="1s" />
           Because he was a little horse.
+          <break time="1s" />
+          Would you like to hear another joke?
         </speak>
-    shouldEndSession: True
+    shouldEndSession: False
 
 dentistPath:
   response:
@@ -97,8 +140,54 @@ dentistPath:
           Wait for it.
           <break time="1s" />
           Tooth <break time="1s" /> hurty.
+          <break time="1s" />
+          Would you like to hear another joke?
         </speak>
-    shouldEndSession: True
+    shouldEndSession: False
+
+forrestPath:
+  response:
+    card:
+      type: Simple
+      title: Forrest Gump
+      content: >
+        Do you know what Forrest Gump changed his password to?
+        One Forrest, one.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          Do you know what Forrest Gump changed his password to?
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          One Forrest, one.
+          <break time="1s" />
+          Would you like to hear another joke?
+        </speak>
+    shouldEndSession: False
+
+holywaterPath:
+  response:
+    card:
+      type: Simple
+      title: Holy Water
+      content: >
+        How do you make holy water?
+        You boil the hell out of it.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          How do you make holy water?
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          You boil the hell out of it.
+          <break time="1s" />
+          Would you like to hear another joke?
+        </speak>
+    shouldEndSession: False
 
 lifesaversPath:
   response:
@@ -106,8 +195,8 @@ lifesaversPath:
       type: Simple
       title: Life Saver
       content: >
-        Did you hear about the guy that invented lifesavers? They say he made
-        a mint.
+        Did you hear about the guy that invented lifesavers?
+        They say he made a mint.
     outputSpeech:
       type: SSML
       ssml: >
@@ -117,8 +206,32 @@ lifesaversPath:
           Wait for it.
           <break time="1s" />
           They say he made a mint.
+          <break time="1s" />
+          Would you like to hear another joke?
         </speak>
-    shouldEndSession: True
+    shouldEndSession: False
+
+peanutsPath:
+  response:
+    card:
+      type: Simple
+      title: Peanuts
+      content: >
+        Two peanuts were walking down the street.
+        One was a salted.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          Two peanuts were walking down the street.
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          One was a salted.
+          <break time="1s" />
+          Would you like to hear another joke?
+        </speak>
+    shouldEndSession: False
 
 goodBye:
   response:
