@@ -1,0 +1,58 @@
+initialState:
+  response:
+    card:
+      type: Simple
+      title: Test State
+      content: This is a test state file
+    outputSpeech:
+      type: PlainText
+      text: Should I say hello?
+    shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodbyeIntent
+    AMAZON.YesIntent: helloIntent
+    CustomIntent: !!python/name:callbacks.do_callback
+    AudioPlayer.PlaybackStarted: null
+    AudioPlayer.PlaybackNearlyFinished: null
+    AudioPlayer.PlaybackFinished: null
+    default: invalidIntent
+
+goodbyeIntent:
+  response:
+    outputSpeech:
+      type: PlainText
+      text: Goodbye
+    shouldEndSession: True
+  branches:
+    default: initialState
+
+helloIntent:
+  response:
+    card:
+      type: Simple
+      title: Test hello card
+      content: Hello
+    outputSpeech:
+      type: PlainText
+      text: hello
+    shouldEndSession: True
+  branches:
+    default: initialState
+
+callbackIntent:
+  response:
+    outputSpeech:
+      type: PlainText
+      text: Callback from Python
+    shouldEndSession: True
+  branches:
+    default: initialState
+
+invalidIntent:
+  response:
+    outputSpeech:
+      type: PlainText
+      text: I don't know how to respond to that
+    shouldEndSession: True
+  branches:
+    default: initialState

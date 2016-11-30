@@ -18,7 +18,7 @@ def _load_state_machine(filename):
 
 class LazySusanApp(object):
 
-    def __init__(self, state_file, session_key='LAZYSUSAN_STATE'):
+    def __init__(self, state_file, session_key="LAZYSUSAN_STATE"):
         self.__state_machine = _load_state_machine(state_file)
         self.__session_key = session_key
 
@@ -81,11 +81,7 @@ class LazySusanApp(object):
         # to certain cases where a callback from Alexa does not accept any type of response. Typically
         # this is during audio playback for long-form audio.
         if branch is None:
-            try:
-                session.update_audio_state(context)
-            except KeyError:
-                pass
-
+            session.update_audio_state(context)
             return
 
         # now branch is the next state

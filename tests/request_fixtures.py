@@ -4,7 +4,7 @@ from uuid import uuid4
 
 
 USER_ID = "amzn1.ask.account.AHVPRU3PVMYSCNY"
-APP_ID = "amzn1.ask.skill.1e0ca6f4-473a-43eb-a8af-702c7f8728f3"
+APP_ID = "amzn1.ask.skill.{}".format(uuid4())
 
 
 def build_request(request_type, request_intent=None, user_id=USER_ID):
@@ -52,130 +52,97 @@ def build_request(request_type, request_intent=None, user_id=USER_ID):
     return alexa_request
 
 
+def build_audio_request(request_type, offset_in_ms=0, token="test", player_activity="PLAYING",
+        user_id=USER_ID):
+    assert request_type.startswith("AudioPlayer.")
+    request = build_request(request_type, user_id=user_id)
+    request.pop("session")
+    request["request"].update({
+        "offsetInMilliseconds": offset_in_ms,
+        "token": token,
+        "type": request_type,
+    })
+    request["context"]["AudioPlayer"].update({
+        "token": token,
+        "playerActivity": player_activity,
+        "offsetInMilliseconds": offset_in_ms,
+    })
+    return request
+
+
 def build_intent_request(intent_name, user_id=USER_ID):
     return build_request("IntentRequest", request_intent={"name": intent_name}, user_id=user_id)
 
 
-def build_thrive_launch_intent(path):
-    return {
-        "name": "ThriveLaunchIntent",
-        "slots": {
-            "ThrivePath": {
-                "name": "ThrivePath",
-                "value": path,
-            }
-        }
-    }
-
-
-def build_thrive_simple_launch_intent(path):
-    return {
-        "name": "ThriveSimpleLaunchIntent",
-        "slots": {
-            "ThrivePath": {
-                "name": "ThrivePath",
-                "value": path,
-            }
-        }
-    }
-
-
 @pytest.fixture()
-def LAUNCH_REQUEST():
+def launch_request():
     return build_request("LaunchRequest")
 
 
 @pytest.fixture()
-def SESSION_ENDED_REQUEST():
+def session_ended_request():
     alexa_request = build_request("SessionEndedRequest")
     alexa_request["reason"] = "EXCEEDED_MAX_REPROMPTS"
     return alexa_request
 
 
 @pytest.fixture()
-def CANCEL_INTENT():
+def cancel_intent():
     return build_intent_request("AMAZON.CancelIntent")
 
 
 @pytest.fixture()
-def HELP_INTENT():
+def help_intent():
     return build_intent_request("AMAZON.HelpIntent")
 
 
 @pytest.fixture()
-def PAUSE_INTENT():
+def pause_intent():
     return build_intent_request("AMAZON.PauseIntent")
 
 
 @pytest.fixture()
-def NO_INTENT():
+def no_intent():
     return build_intent_request("AMAZON.NoIntent")
 
 
 @pytest.fixture()
-def START_OVER_INTENT():
+def start_over_intent():
     return build_intent_request("AMAZON.StartOverIntent")
 
 
 @pytest.fixture()
-def STOP_INTENT():
+def stop_intent():
     return build_intent_request("AMAZON.StopIntent")
 
 
 @pytest.fixture()
-def YES_INTENT():
+def yes_intent():
     return build_intent_request("AMAZON.YesIntent")
 
 
 @pytest.fixture()
-def THRIVE_LAUNCH_INTENT_MEDITATE():
-    intent = build_thrive_launch_intent("meditate")
-    return build_request("IntentRequest", request_intent=intent)
+def custom_intent():
+    return build_intent_request("CustomIntent")
 
 
 @pytest.fixture()
-def THRIVE_LAUNCH_INTENT_POWER_DOWN():
-    intent = build_thrive_launch_intent("power down")
-    return build_request("IntentRequest", request_intent=intent)
+def playback_started_request():
+    return build_audio_request("AudioPlayer.PlaybackStarted")
 
 
 @pytest.fixture()
-def THRIVE_CHOOSE_RANDOM_PATH_INTENT():
-    return build_intent_request("ThriveChooseRandomPathIntent")
+def playback_nearly_finished_request():
+    return build_audio_request("AudioPlayer.PlaybackNearlyFinished", offset_in_ms=41000)
 
 
 @pytest.fixture()
-def THRIVE_SIMPLE_LAUNCH_INTENT():
-    return build_intent_request("ThriveSimpleLaunchIntent")
+def playback_finished_request():
+    return build_audio_request("AudioPlayer.PlaybackFinished", offset_in_ms=100000)
 
 
 @pytest.fixture()
-def THRIVE_SIMPLE_LAUNCH_INTENT_MEDITATE():
-    intent = build_thrive_simple_launch_intent("meditate")
-    return build_request("IntentRequest", request_intent=intent)
-
-
-@pytest.fixture()
-def THRIVE_SIMPLE_LAUNCH_INTENT_VIZUALIZE():
-    intent = build_thrive_simple_launch_intent("vizualiation")
-    return build_request("IntentRequest", request_intent=intent)
-
-
-@pytest.fixture()
-def PLAYBACK_NEARLY_FINISHED_REQUEST():
-    alexa_request = build_request("AudioPlayer.PlaybackNearlyFinished")
-    alexa_request["request"]["offsetInMilliseconds"] = 0
-    alexa_request["token"]["offsetInMilliseconds"] = "meditation-token"
-    alexa_request["context"]["AudioPlayer"] = {
-        "token": "meditation-token",
-        "playerActivity": "PLAYING",
-        "offsetInMilliseconds": 40,
-    }
-    return alexa_request
-
-
-@pytest.fixture()
-def RESUME_REQUEST():
+def resume_request():
     alexa_request = build_request("AMAZON.ResumeIntent")
     alexa_request["context"]["AudioPlayer"] = {
         "token": "meditation-token",
