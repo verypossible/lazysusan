@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import json
 import os
 import sys
@@ -7,13 +5,18 @@ import sys
 import yaml
 
 from constants import *
+from logger import get_logger
 from response import build_response_payload
 from session import Session
+
+
+_logger = get_logger()
 
 
 def _load_state_machine(filename):
     with open(filename, 'r') as fh:
         return yaml.load(fh)
+
 
 
 class LazySusanApp(object):
@@ -60,13 +63,13 @@ class LazySusanApp(object):
         except KeyError:
             pass
 
-        print(event)
+        _logger.error(event)
         raise Exception("Could not find userId in lambda event")
 
 
     def build_response(self, request, session, intent, context, user_id):
         state = session.get_state()
-        print("Current state: %s" % (state, ))
+        _logger.info("Current state: %s" % (state, ))
 
         # Determine what our response is by looking up our current state followed by
         # the intent in the request. Each state must define a "default" branch.
@@ -112,7 +115,7 @@ class LazySusanApp(object):
         :attr context: Lambda context
         """
         # Leave this in for logging
-        print("Event: %s" % (event, ))
+        _logger.info("Event: %s" % (event, ))
 
         request = event["request"]
         context = event.get("context")
@@ -127,5 +130,5 @@ class LazySusanApp(object):
         session.save()
 
         # Leave this in for logging
-        print("Response: %s" % (response, ))
+        _logger.info("Response: %s" % (response, ))
         return response
