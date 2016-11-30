@@ -1,0 +1,129 @@
+# A sample for what a valid response object to Alexa looks like.  Note that the directives is only
+# applicable when playing audio back. Also note that the "response" object is what is taken
+# verbatim and sent back as the Alexa response in our Lambda functions (as json).
+#
+#sample:
+#  card:
+#    type:
+#    title:
+#    content:
+#  outputSpeech:
+#    type:
+#    text:
+#  reprompt:
+#    outputSpeech:
+#      type:
+#      text:
+#  shouldEndSession:
+#  directives:
+#   - type:
+#     playBehavior:
+#     audioItem:
+#       stream:
+#         token:
+#         url:
+#         offsetInMilliseconds:
+
+initialState:
+  response:
+    card:
+      type: Simple
+      title: Dad Jokes
+      content: >
+        Would you like to hear a dad joke?
+    outputSpeech:
+      type: PlainText
+      text: >
+        Would you like to hear a dad joke?
+    shouldEndSession: False
+  branches: &initialStateBranches
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: !!python/name:callbacks.dad_joke
+    default: initialState
+
+chickenPath:
+  response:
+    card:
+      type: Simple
+      title: Chicken Coops
+      content: >
+        Why do chicken coops only have two doors? Because if they had four,
+        they would be chicken sedans.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          Why do chicken coops only have two doors?
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          Because if they had four, they would be chicken sedans.
+        </speak>
+    shouldEndSession: True
+
+clydesdalePath:
+  response:
+    card:
+      type: Simple
+      title: Clydesdale
+      content: >
+        Why did the Clydesdale give the pony a glass of water?
+        Because he was a little horse.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          Why did the Clydesdale give the pony a glass of water?
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          Because he was a little horse.
+        </speak>
+    shouldEndSession: True
+
+dentistPath:
+  response:
+    card:
+      type: Simple
+      title: Dentist
+      content: >
+        What is the best time to go to the dentist? Tooth hurt-y.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          What is the best time to go to the dentist?
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          Tooth <break time="1s" /> hurty.
+        </speak>
+    shouldEndSession: True
+
+lifesaversPath:
+  response:
+    card:
+      type: Simple
+      title: Life Saver
+      content: >
+        Did you hear about the guy that invented lifesavers? They say he made
+        a mint.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          Did you hear about the guy that invented lifesavers?
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          They say he made a mint.
+        </speak>
+    shouldEndSession: True
+
+goodBye:
+  response:
+    outputSpeech:
+      type: PlainText
+      text: >
+        Thanks for trying dad jokes, good bye.
+    shouldEndSession: True

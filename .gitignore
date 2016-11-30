@@ -2,6 +2,7 @@
 .env
 .env.*
 envs/
+examples/**/lib/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
