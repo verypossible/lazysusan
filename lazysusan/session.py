@@ -12,7 +12,7 @@ class Session(object):
         self.__session_key = session_key
 
     def get_backend(self):
-        backend = os.environ.get("LAZYSUSAN_STORAGE_BACKEND", "dynamodb")
+        backend = os.environ.get("LAZYSUSAN_SESSION_STORAGE_BACKEND", "dynamodb")
 
         if backend == "dynamodb":
             return persistence.DynamoDB()

@@ -13,7 +13,7 @@ def test_get_backend_memory(session):
 
 
 def test_get_backend_dynamodb(mocker):
-    mocker.patch.dict("os.environ", {"LAZYSUSAN_STORAGE_BACKEND": "dynamodb"})
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_SESSION_STORAGE_BACKEND": "dynamodb"})
     session = Session(user_id="dynamodb", session_key="THRIVE_STATE")
     assert session._backend.__class__.__name__ == "DynamoDB"
 

@@ -16,8 +16,8 @@ class Memory(dict):
 
 class DynamoDB(dict):
 
-    TABLE_NAME = os.environ["LAZYSUSAN_DYNAMODB_TABLE_NAME"]
-    AWS_REGION = os.environ["LAZYSUSAN_AWS_REGION"]
+    TABLE_NAME = os.environ["LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME"]
+    AWS_REGION = os.environ["LAZYSUSAN_SESSION_AWS_REGION"]
 
     def __init__(self, *args, **kwargs):
         self._db = None
