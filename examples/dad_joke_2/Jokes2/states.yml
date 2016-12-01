@@ -57,6 +57,10 @@ billPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: calendarPath
+    default: goodBye
 
 calendarPath:
   response:
@@ -79,6 +83,10 @@ calendarPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: chickenPath
+    default: goodBye
 
 chickenPath:
   response:
@@ -101,6 +109,10 @@ chickenPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: clydesdalePath
+    default: goodBye
 
 clydesdalePath:
   response:
@@ -123,6 +135,10 @@ clydesdalePath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: dentistPath
+    default: goodBye
 
 dentistPath:
   response:
@@ -144,6 +160,10 @@ dentistPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: forrestPath
+    default: goodBye
 
 forrestPath:
   response:
@@ -166,6 +186,10 @@ forrestPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: holywaterPath
+    default: goodBye
 
 holywaterPath:
   response:
@@ -188,6 +212,10 @@ holywaterPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: lifesaversPath
+    default: goodBye
 
 lifesaversPath:
   response:
@@ -210,6 +238,10 @@ lifesaversPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: paperPath
+    default: goodBye
 
 paperPath:
   response:
@@ -232,6 +264,10 @@ paperPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: peanutsPath
+    default: goodBye
 
 peanutsPath:
   response:
@@ -254,6 +290,10 @@ peanutsPath:
           Would you like to hear another joke?
         </speak>
     shouldEndSession: False
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: billPath
+    default: goodBye
 
 goodBye:
   response:
