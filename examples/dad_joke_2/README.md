@@ -1,7 +1,8 @@
-# Sample Alexa Skill: Bad Dad Jokes
+# Sample Alexa Skill: Bad Dad Jokes 2
 
-This example is an application that does not store any kind of session
-information at all. All branches are controlled from the initial state.
+This application uses a cookie style storage for the current state so that it
+will not replay the same dad joke back to back. This helps illustrate how the
+state progression works.
 
 ## Deploy
 
