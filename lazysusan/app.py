@@ -100,7 +100,7 @@ class LazySusanApp(object):
             offset = session.get_audio_offset()
             response['directives'][0]['audioItem']['stream']['offsetInMilliseconds'] = offset
 
-        response_payload = build_response_payload(response)
+        response_payload = build_response_payload(response, session.get_state_params())
 
         return response_payload
 
@@ -122,7 +122,7 @@ class LazySusanApp(object):
 
         user_id = LazySusanApp.get_user_id_from_event(event)
 
-        session = Session(user_id, self.__session_key)
+        session = Session(user_id, self.__session_key, event)
 
         intent = LazySusanApp.get_intent_from_request(request)
         response = self.build_response(request, session, intent, context, user_id)

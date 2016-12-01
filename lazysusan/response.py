@@ -1,4 +1,4 @@
-def build_response_payload(speechlet_response):
+def build_response_payload(speechlet_response, state):
     """Build a valid Alexa response given a speechlet data structure.
 
     :attr speechlet_response: A data structure which conforms to the Alexa response type
@@ -6,6 +6,7 @@ def build_response_payload(speechlet_response):
 
     """
     return {
-        'version': '2.0',
-        'response': speechlet_response,
+        "version": "2.0",
+        "sessionAttributes": state,
+        "response": speechlet_response,
     }
