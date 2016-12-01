@@ -189,6 +189,28 @@ holywaterPath:
         </speak>
     shouldEndSession: False
 
+imDadPath:
+  response:
+    card:
+      type: Simple
+      title: I'm Dad
+      content: >
+        My son told me he would call me later.
+        I told him not to call me later, but call me Dad.
+    outputSpeech:
+      type: SSML
+      ssml: >
+        <speak>
+          My son told me he would call me later. I had to tell him not to call me later.
+          <break time="1s" />
+          Wait for it.
+          <break time="1s" />
+          I told him to call me Dad.
+          <break time="1s" />
+          Would you like to hear another joke?
+        </speak>
+    shouldEndSession: False
+
 lifesaversPath:
   response:
     card:
