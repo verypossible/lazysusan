@@ -18,6 +18,37 @@ def test_get_backend_dynamodb(mocker):
     assert session._backend.__class__.__name__ == "DynamoDB"
 
 
+def test_get_backend_cookie(mocker):
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_SESSION_STORAGE_BACKEND": "cookie"})
+    session = Session(user_id="dynamodb", session_key="THRIVE_STATE", event={"session": {"attributes": {}}})
+    assert session._backend.__class__.__name__ == "Memory"
+
+
+def test_get_backend_cookie(mocker):
+    event = {
+        "session": {
+            "attributes": {
+                "THRIVE_STATE": "foobar"
+            }
+        }
+    }
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_SESSION_STORAGE_BACKEND": "cookie"})
+    session = Session(user_id="dynamodb", session_key="THRIVE_STATE", event=event)
+    assert session.get_state() == "foobar"
+
+
+def test_get_backend_cookie_bad_event(mocker):
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_SESSION_STORAGE_BACKEND": "cookie"})
+    session = Session(user_id="dynamodb", session_key="THRIVE_STATE", event=("hi", "mom"))
+    assert session._backend.__class__.__name__ == "Memory"
+
+
+def test_get_backend_cookie_empty_event(mocker):
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_SESSION_STORAGE_BACKEND": "cookie"})
+    session = Session(user_id="dynamodb", session_key="THRIVE_STATE", event={"session": {}})
+    assert session._backend.__class__.__name__ == "Memory"
+
+
 def test_get_state_default(session):
     assert session.get_state() == "initialState"
 

@@ -4,9 +4,10 @@ import persistence
 
 class Session(object):
 
-    def __init__(self, user_id, session_key):
+    def __init__(self, user_id, session_key, event=None):
         self._user_id = user_id
 
+        self.__event = event or {}
         self._backend = self.get_backend()
         self._backend.connect(userId=self._user_id)
         self.__session_key = session_key
@@ -16,11 +17,21 @@ class Session(object):
 
         if backend == "dynamodb":
             return persistence.DynamoDB()
-        else:
-            return persistence.Memory()
+        elif backend == "cookie":
+            try:
+                memory = persistence.Memory()
+                memory.update(self.__event["session"]["attributes"])
+                return memory
+            except (KeyError, TypeError), err:
+                pass
+
+        return persistence.Memory()
 
     def get_state(self):
         return self._backend.get(self.__session_key, "initialState")
+
+    def get_state_params(self):
+        return {self.__session_key: self.get_state()}
 
     def get_audio_offset(self):
         try:
