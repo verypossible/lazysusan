@@ -10,6 +10,7 @@ def dad_joke(request, state_machine):
         "dentistPath",
         "forrestPath",
         "holywaterPath",
+        "imDadPath",
         "lifesaversPath",
         "paperPath",
         "peanutsPath",

@@ -67,7 +67,7 @@ kleenexPath:
   response:
     card:
       type: Simple
-      title: Clydesdale
+      title: Kleenex
       content: >
         How do you get a kleenex to dance?
         Put a little boogie in it.

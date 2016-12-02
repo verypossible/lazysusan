@@ -68,7 +68,7 @@ kleenexPath:
   response:
     card:
       type: Simple
-      title: Clydesdale
+      title: Kleenex
       content: >
         How do you get a kleenex to dance?
         Put a little boogie in it.
@@ -83,8 +83,15 @@ kleenexPath:
           Put a little boogie in it.
         </speak>
     shouldEndSession: True
-
+  branches:
+    AMAZON.NoIntent: goodBye
+    AMAZON.YesIntent: billPath
+    default: goodBye
 ```
+
+You will also want to modify the `peanutsPath > branches > AMAZON.YesIntent` to
+now reference the `kleenexPath` so that you can add your new state to the
+rotation.
 
 Edit the `callbacks/random_joke.py` module to add `kleenexPath` to the list of
 available random jokes. Then follow the deploy steps.
