@@ -89,7 +89,13 @@ class LazySusanApp(object):
 
         # now branch is the next state
         if callable(branch):
-            branch = branch(request, self.__state_machine)
+            branch_or_response = branch(request, session, intent, context, user_id,
+                    self.__state_machine)
+            if isinstance(branch_or_response, dict):
+                return branch_or_response
+            else:
+                # not it's just a key
+                branch = branch_or_response
 
         session.update_state(branch, context)
 

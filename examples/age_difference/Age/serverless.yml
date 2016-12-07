@@ -1,0 +1,16 @@
+service: Age
+
+provider:
+  name: aws
+  runtime: python2.7
+  region: ${env:AWS_REGION}
+  memorySize: 128
+
+package:
+  exclude:
+    - "**/*.pyc"
+    - "**/*.swp"
+
+functions:
+  age:
+    handler: handler.main
