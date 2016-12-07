@@ -38,22 +38,17 @@ initialState:
     shouldEndSession: False
   branches: &initialStateBranches
     LaunchRequest: initialState
-    MyAgeIntent: goodBye
+    MyAgeIntent: !!python/name:callbacks.calc_difference
     default: goodBye
-    bob: !!python/name:callbacks.calc_difference
 
 ageResponse:
   response:
-    card:
-      type: Simple
-      title: Age Difference
-      content: >
     outputSpeech:
       type: PlainText
-      text: >
+      text: Got an age response, goodbye
     shouldEndSession: True
-  branches: &initialStateBranches
-    default: goodBye
+  branches:
+    <<: *initialStateBranches
 
 goodBye:
   response:

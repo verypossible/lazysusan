@@ -1,4 +1,4 @@
-NAME = "spartan/thrive-serverless"
+NAME = "spartan/spartan-serverless"
 
 ENVDIR=envs
 LIBS_DIR=Age/lib
