@@ -1,8 +1,8 @@
-# Sample Alexa Skill: Bad Dad Jokes 2
+# Sample Alexa Skill: Age Calc
 
-This application uses a cookie style storage for the current state so that it
-will not replay the same dad joke back to back. This helps illustrate how the
-state progression works.
+This application demonstrates how a callback can be used to give the user
+dynamically generated responses. While this does not hit an API, it certainly
+could be used to hit an api and provide the user with custom feedback.
 
 ## Deploy
 
@@ -37,61 +37,29 @@ Inside of the amazon developer portal, create a new skill.
 Intents
 ```
 {
-    "intents": [
-        {
-            "intent": "MySimpleLaunchIntent"
-        },
-        {
-            "intent": "AMAZON.YesIntent"
-        },
-          {
-            "intent": "AMAZON.NoIntent"
-        }
-    ]
+  "intents": [
+    {
+      "intent": "MyAgeIntent",
+        "slots": [{
+          "name": "dob",
+          "type": "AMAZON.DATE"
+        }]
+    }
+  ]
 }
 ```
 
 Sample utterances
 ```
-MySimpleLaunchIntent open
+MyAgeIntent my birthday is {dob}
+MyAgeIntent i was born on {dob}
+MyAgeIntent it is {dob}
 ```
 
 Once you have everything filled out, you should be able to test on an alexa
 capable device or within the amazon developer portal.
 
-## Adding another dad joke
+## Modify the output
 
-Edit the `states.yml` file to add
-
-```yaml
-kleenexPath:
-  response:
-    card:
-      type: Simple
-      title: Kleenex
-      content: >
-        How do you get a kleenex to dance?
-        Put a little boogie in it.
-    outputSpeech:
-      type: SSML
-      ssml: >
-        <speak>
-          How do you get a kleenex to dance?
-          <break time="1s" />
-          Wait for it.
-          <break time="1s" />
-          Put a little boogie in it.
-        </speak>
-    shouldEndSession: True
-  branches:
-    AMAZON.NoIntent: goodBye
-    AMAZON.YesIntent: billPath
-    default: goodBye
-```
-
-You will also want to modify the `peanutsPath > branches > AMAZON.YesIntent` to
-now reference the `kleenexPath` so that you can add your new state to the
-rotation.
-
-Edit the `callbacks/random_joke.py` module to add `kleenexPath` to the list of
-available random jokes. Then follow the deploy steps.
+Edit the `callbacks/__init__.py` module to modify the response that is given to
+the user.

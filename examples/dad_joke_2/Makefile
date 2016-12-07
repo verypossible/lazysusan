@@ -1,7 +1,6 @@
 NAME = "spartan/jokes2-serverless"
 
 ENVDIR=envs
-DOCKER_DIR=$(ENVDIR)/docker
 LIBS_DIR=Jokes2/lib
 
 
@@ -10,7 +9,7 @@ LIBS_DIR=Jokes2/lib
 run = docker run --rm -it \
 		-v `pwd`:/code \
 		--env ENV=$(ENV) \
-		--env-file envs/docker/$2 \
+		--env-file envs/$2 \
 		--name=jokes2-serverless-$(ENV) $(NAME) $1
 
 
@@ -29,7 +28,7 @@ shell : check-env env-dirs
 	$(call run,bash,$(ENV))
 
 env-dirs :
-	@test -d $(DOCKER_DIR) || mkdir -p $(DOCKER_DIR)
+	@test -d $(ENVDIR)
 
 tests : check-env
 	$(call run,py.test tests,$(ENV))

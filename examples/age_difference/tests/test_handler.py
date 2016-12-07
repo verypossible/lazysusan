@@ -1,6 +1,6 @@
 import pytest
 
-from callbacks import dad_joke
+from callbacks import calc_difference
 
 
 def _build_request_slot(name):
@@ -12,7 +12,7 @@ def _build_request_slot(name):
     }
 
 
-def test_random_path():
-    path_name = dad_joke(None, None)
+def test_calc():
+    path_name = calc_difference(None, None, None, None, None, None)
     assert path_name
-    assert path_name.endswith("Path")
+    assert path_name == "goodBye"

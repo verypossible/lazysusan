@@ -6,7 +6,7 @@ import pytest
 from request_fixtures import *
 
 here = os.path.dirname(os.path.realpath(__file__))
-sys.path.insert(0, os.path.join(here, "../Jokes2"))
+sys.path.insert(0, os.path.join(here, "../Age"))
 
 os.environ["LAZYSUSAN_SESSION_STORAGE_BACKEND"] = "memory"
 os.environ["LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME"] = "test"

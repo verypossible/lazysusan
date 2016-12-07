@@ -29,6 +29,10 @@ storage and will not repeat the same joke back to back times. This will
 demonstrate how you can use state in your application to build a full fledged
 application.
 
+The age example is an example application that demonstrates returning
+dynamically generated content to be spoken by the alexa enabled device. This
+could also be used to read data directly from an external API.
+
 _Coming Soon_ We are currently working on an example application that uses
 DynamoDB for session storage. This is necessary if you need for your session to
 live beyond the normal Alexa session lifetime. For example, if you are playing

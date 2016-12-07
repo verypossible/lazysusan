@@ -32,12 +32,12 @@ def calc_difference(request, session, intent, context, user_id, state_machine):
                 if age.days == 1:
                     msg += "one day old"
                 else:
-                    msg += "%s days old" % (age.months, )
+                    msg += "%s days old" % (age.days, )
 
         response = state_machine["ageResponse"]["response"]
         response["outputSpeech"]["text"] = msg
         return build_response_payload(response, session.get_state_params())
-    except KeyError:
+    except (KeyError, TypeError):
         date = ""
         log.error("Could  not find date in slots")
 
