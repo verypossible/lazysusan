@@ -27,7 +27,7 @@ class LazySusanApp(object):
 
 
     @staticmethod
-    def get_intent_from_request(request):
+    def get_intent_name_from_request(request):
         try:
             return request["intent"]["name"]
         except KeyError:
@@ -67,16 +67,16 @@ class LazySusanApp(object):
         raise Exception("Could not find userId in lambda event")
 
 
-    def build_response(self, request, session, intent, context, user_id):
+    def build_response(self, request, session, intent_name, context, user_id):
         state = session.get_state()
         _logger.info("Current state: %s" % (state, ))
 
         # Determine what our response is by looking up our current state followed by
-        # the intent in the request. Each state must define a "default" branch.
+        # the intent_name in the request. Each state must define a "default" branch.
         branches = self.__state_machine[state]["branches"]
 
         try:
-            branch = branches[intent]
+            branch = branches[intent_name]
         except KeyError:
             branch = branches["default"]
 
@@ -89,7 +89,7 @@ class LazySusanApp(object):
 
         # now branch is the next state
         if callable(branch):
-            branch_or_response = branch(request, session, intent, context, user_id,
+            branch_or_response = branch(request, session, intent_name, context, user_id,
                     self.__state_machine)
             if isinstance(branch_or_response, dict):
                 return branch_or_response
@@ -130,8 +130,8 @@ class LazySusanApp(object):
 
         session = Session(user_id, self.__session_key, event)
 
-        intent = LazySusanApp.get_intent_from_request(request)
-        response = self.build_response(request, session, intent, context, user_id)
+        intent_name = LazySusanApp.get_intent_name_from_request(request)
+        response = self.build_response(request, session, intent_name, context, user_id)
 
         session.save()
 
