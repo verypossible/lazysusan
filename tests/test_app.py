@@ -6,13 +6,6 @@ from lazysusan.app import LazySusanApp
 CWD = os.path.dirname(os.path.realpath(__file__))
 
 
-def test_get_intent_name_from_request_exception():
-    with pytest.raises(Exception) as err:
-        LazySusanApp.get_intent_name_from_request({})
-
-    assert "Could not find appropriate callback for intent" in str(err.value)
-
-
 def test_get_user_id_from_event_exception():
     with pytest.raises(Exception) as err:
         LazySusanApp.get_user_id_from_event({})

@@ -6,6 +6,7 @@ import yaml
 
 from constants import *
 from logger import get_logger
+from request import Request
 from response import build_response_payload
 from session import Session
 
@@ -24,21 +25,6 @@ class LazySusanApp(object):
     def __init__(self, state_file, session_key="LAZYSUSAN_STATE"):
         self.__state_machine = _load_state_machine(state_file)
         self.__session_key = session_key
-
-
-    @staticmethod
-    def get_intent_name_from_request(request):
-        try:
-            return request["intent"]["name"]
-        except KeyError:
-            pass
-
-        try:
-            return request["type"]
-        except KeyError:
-            pass
-
-        raise Exception("Could not find appropriate callback for intent: %s" % (request, ))
 
 
     @staticmethod
@@ -123,15 +109,14 @@ class LazySusanApp(object):
         # Leave this in for logging
         _logger.info("Event: %s" % (event, ))
 
-        request = event["request"]
+        request = Request(event["request"])
         context = event.get("context")
 
         user_id = LazySusanApp.get_user_id_from_event(event)
 
         session = Session(user_id, self.__session_key, event)
 
-        intent_name = LazySusanApp.get_intent_name_from_request(request)
-        response = self.build_response(request, session, intent_name, context, user_id)
+        response = self.build_response(request, session, request.intent_name, context, user_id)
 
         session.save()
 
