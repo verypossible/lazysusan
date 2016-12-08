@@ -86,3 +86,26 @@ def test_update_audio_state_context_key_error(session):
 def test_update_audio_state_context_none(session):
     assert session.update_audio_state(None) is None
     assert session._backend == {}
+
+
+def test_set_value(session):
+    session.set("magickey", 12345)
+    assert session._backend["magickey"] == 12345
+
+
+def test_set_none(session):
+    session.set("magickey", None)
+    assert session._backend["magickey"] == None
+
+
+def test_get_value(session):
+    session._backend["magickey"] = "hello"
+    assert session.get("magickey") == "hello"
+
+
+def test_get_missing(session):
+    assert session.get("magickey") is None
+
+
+def test_get_missing_with_default(session):
+    assert session.get("magickey", "default") == "default"

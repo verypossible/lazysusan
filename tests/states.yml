@@ -12,10 +12,29 @@ initialState:
     AMAZON.NoIntent: goodbyeIntent
     AMAZON.YesIntent: helloIntent
     CustomIntent: !!python/name:callbacks.do_callback
+    DynamicIntent: !!python/name:callbacks.do_dynamic_callback
     AudioPlayer.PlaybackStarted: null
     AudioPlayer.PlaybackNearlyFinished: null
     AudioPlayer.PlaybackFinished: null
+    AudioOffsetIntent: pickupAudio
     default: invalidIntent
+
+
+pickupAudio:
+  get_audio_offset_from_session: true
+  response:
+    outputSpeech:
+      type: PlainText
+      text: Get audio offset
+    shouldEndSession: True
+    directives:
+    - type: AudioPlayer.Play
+      audioItem:
+        stream:
+          offsetInMilliseconds: 0
+  branches:
+    default: initialState
+
 
 goodbyeIntent:
   response:
