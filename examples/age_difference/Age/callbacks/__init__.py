@@ -28,6 +28,16 @@ def calc_difference(request, session, intent, context, user_id, state_machine):
     dob = datetime.strptime(date, "%Y-%m-%d")
     age = relativedelta(now, dob)
 
+    msg = age_breakdown(age)
+    msg += ". %s" % (last_user_difference(session, dob))
+
+    session.set(DOB_KEY, dob.toordinal())
+
+    response_dict = build_response("ageResponse", msg, state_machine)
+    return build_response_payload(response_dict, session.get_state_params())
+
+
+def age_breakdown(age):
     if not age.months and not age.days:
         msg = "Happy birthday! You are %s years old today" % (age.years, )
     else:
@@ -43,16 +53,22 @@ def calc_difference(request, session, intent, context, user_id, state_machine):
                 msg += "one day old"
             else:
                 msg += "%s days old" % (age.days, )
+    return msg
 
+
+def last_user_difference(session, dob):
     last_date = session.get(DOB_KEY)
     if last_date:
         last_date = datetime.fromordinal(last_date)
-        diff = relativedelta(dob, last_date)
-        old_or_younger = 'younger' if dob < last_date else 'older'
-        msg += '. You are %s years, %s months, %s days %s than the last user.' % (
-                diff.years, diff.months, diff.days, old_or_younger)
+        old_or_younger = "same"
+        if dob > last_date:
+            old_or_younger = "younger"
+            diff = relativedelta(dob, last_date)
+        elif dob < last_date:
+            old_or_younger = "older"
+            diff = relativedelta(last_date, dob)
 
-    session.set(DOB_KEY, dob.toordinal())
-
-    response_dict = build_response("ageResponse", msg, state_machine)
-    return build_response_payload(response_dict, session.get_state_params())
+        if old_or_younger != "same":
+            return "You are %s years, %s months, %s days %s than the last user." % (
+                    diff.years, diff.months, diff.days, old_or_younger)
+        return "You have the same birthday as the last user."

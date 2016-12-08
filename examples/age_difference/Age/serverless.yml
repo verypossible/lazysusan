@@ -14,14 +14,14 @@ provider:
     - Effect: "Allow"
       Action:
         - "dynamodb:*"
-      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${env:ENV}AgeCalculator"
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${env:LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME}"
 
 resources:
   Resources:
     dynamoUsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${env:ENV}AgeCalculator
+        TableName: ${env:LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME}
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
