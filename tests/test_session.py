@@ -1,5 +1,9 @@
 import pytest
 
+from datetime import (
+    datetime,
+    timedelta,
+)
 from lazysusan.session import Session
 
 
@@ -109,3 +113,36 @@ def test_get_missing(session):
 
 def test_get_missing_with_default(session):
     assert session.get("magickey", "default") == "default"
+
+
+def test_set_request_time(session):
+    ts = datetime(2016, 12, 8, 16, 38, 5, 0)
+    session.last_request_time = ts
+    assert session.last_request_time == ts
+
+
+def test_default_last_request_time(session):
+    assert isinstance(session.last_request_time, datetime)
+
+
+def test_is_not_expired(session, mocker):
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_TTL_SECONDS": "100"})
+    assert session.is_expired == False
+
+
+def test_is_expired(session, mocker):
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_TTL_SECONDS": "100"})
+    yesterday = datetime.now() - timedelta(days=1)
+    session.last_request_time = yesterday
+    assert session.is_expired == True
+
+
+def test_is_expired_disabled(session, mocker):
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_TTL_SECONDS": "-1"})
+    assert session.is_expired == False
+
+
+def test_is_expired_bad(session, mocker):
+    mocker.patch.dict("os.environ", {"LAZYSUSAN_TTL_SECONDS": "abc1"})
+    with pytest.raises(ValueError):
+        session.is_expired

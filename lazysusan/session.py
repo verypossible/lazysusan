@@ -2,6 +2,9 @@ import os
 import persistence
 
 
+from datetime import datetime
+
+
 class Session(object):
 
     def __init__(self, user_id, session_key, event=None):
@@ -12,11 +15,31 @@ class Session(object):
         self._backend.connect(userId=self._user_id)
         self.__session_key = session_key
 
-    def set(self, key, val):
-        self._backend[key] = val
+    @property
+    def is_expired(self):
+        try:
+            time_limit = int(os.environ.get("LAZYSUSAN_TTL_SECONDS", "0"))
+        except ValueError:
+            raise ValueError("The LAZYSUSAN_TTL_SECONDS must be an integer greater than 0")
+
+        if time_limit <= 0:
+            return False
+
+        return (datetime.now() - self.last_request_time).total_seconds() > time_limit
+
+    @property
+    def last_request_time(self):
+        return self.get("LAST_REQUEST_TIME", datetime.now())
+
+    @last_request_time.setter
+    def last_request_time(self, timestamp):
+        self.set("LAST_REQUEST_TIME", timestamp)
 
     def get(self, key, default=None):
         return self._backend.get(key, default)
+
+    def set(self, key, val):
+        self._backend[key] = val
 
     def get_backend(self):
         backend = os.environ.get("LAZYSUSAN_SESSION_STORAGE_BACKEND", "dynamodb")
