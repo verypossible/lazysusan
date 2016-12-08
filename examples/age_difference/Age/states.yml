@@ -49,6 +49,7 @@ ageResponse:
     shouldEndSession: True
   branches:
     <<: *initialStateBranches
+    LaunchRequest: initialState
 
 goodBye:
   response:
@@ -57,3 +58,6 @@ goodBye:
       text: >
         Thanks for trying age difference, good bye.
     shouldEndSession: True
+  branches:
+    <<: *initialStateBranches
+    LaunchRequest: initialState

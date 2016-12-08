@@ -9,8 +9,6 @@ sys.path.insert(0, os.path.join(CWD, "lib"))
 
 import yaml
 
-os.environ["LAZYSUSAN_SESSION_STORAGE_BACKEND"] = "cookie"
-os.environ["LAZYSUSAN_LOG_LEVEL"] = "logging.INFO"
 from lazysusan import LazySusanApp
 
 
