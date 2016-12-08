@@ -127,6 +127,16 @@ def custom_intent():
 
 
 @pytest.fixture()
+def dynamic_intent():
+    return build_intent_request("DynamicIntent")
+
+
+@pytest.fixture()
+def audio_offset_intent():
+    return build_intent_request("AudioOffsetIntent")
+
+
+@pytest.fixture()
 def playback_started_request():
     return build_audio_request("AudioPlayer.PlaybackStarted")
 

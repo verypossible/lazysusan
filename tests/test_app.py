@@ -69,6 +69,26 @@ class TestInitialState(object):
         response = app.handle(custom_intent)
         assert_response(response, "callbackIntent", mock_session, self.EXPECTED_KEYS)
 
+    def test_dynamic_intent(self, app, mock_session, dynamic_intent):
+        response = app.handle(dynamic_intent)
+        expected_msg = "this is some dynamic content"
+        assert response["response"]["outputSpeech"]["text"] == expected_msg
+
+    def test_audio_offset(self, app, mock_session, audio_offset_intent, mocker):
+        mock_get_offset = mocker.patch("lazysusan.session.Session.get_audio_offset")
+        mock_get_offset.return_value = 111
+
+        response = app.handle(audio_offset_intent)
+        expected = {
+            "audioItem": {
+                "stream": {
+                    "offsetInMilliseconds": 111
+                }
+            },
+            "type": "AudioPlayer.Play"
+        }
+        assert response["response"]["directives"] == [expected]
+
     def test_playback_started(self, app, mock_session, playback_started_request):
         response = app.handle(playback_started_request)
         assert response is None
