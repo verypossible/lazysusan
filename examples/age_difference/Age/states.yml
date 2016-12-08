@@ -1,0 +1,63 @@
+# A sample for what a valid response object to Alexa looks like.  Note that the directives is only
+# applicable when playing audio back. Also note that the "response" object is what is taken
+# verbatim and sent back as the Alexa response in our Lambda functions (as json).
+#
+#sample:
+#  card:
+#    type:
+#    title:
+#    content:
+#  outputSpeech:
+#    type:
+#    text:
+#  reprompt:
+#    outputSpeech:
+#      type:
+#      text:
+#  shouldEndSession:
+#  directives:
+#   - type:
+#     playBehavior:
+#     audioItem:
+#       stream:
+#         token:
+#         url:
+#         offsetInMilliseconds:
+
+initialState:
+  response:
+    card:
+      type: Simple
+      title: Age Difference
+      content: >
+        When is your birthday?
+    outputSpeech:
+      type: PlainText
+      text: >
+        When is your birthday?
+    shouldEndSession: False
+  branches: &initialStateBranches
+    LaunchRequest: initialState
+    MyAgeIntent: !!python/name:callbacks.calc_difference
+    default: goodBye
+
+ageResponse:
+  response:
+    outputSpeech:
+      type: PlainText
+      text: Got an age response, goodbye
+    shouldEndSession: True
+  branches:
+    <<: *initialStateBranches
+    LaunchRequest: initialState
+
+goodBye:
+  response:
+    outputSpeech:
+      type: PlainText
+      text: >
+        Thanks for trying age difference, good bye.
+    shouldEndSession: True
+  branches:
+    <<: *initialStateBranches
+    LaunchRequest: initialState

@@ -12,6 +12,12 @@ class Session(object):
         self._backend.connect(userId=self._user_id)
         self.__session_key = session_key
 
+    def set(self, key, val):
+        self._backend[key] = val
+
+    def get(self, key, default=None):
+        return self._backend.get(key, default)
+
     def get_backend(self):
         backend = os.environ.get("LAZYSUSAN_SESSION_STORAGE_BACKEND", "dynamodb")
 

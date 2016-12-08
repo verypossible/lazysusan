@@ -1,0 +1,42 @@
+service: Age
+
+provider:
+  name: aws
+  runtime: python2.7
+  region: ${env:AWS_REGION}
+  memorySize: 128
+  environment:
+    LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME: ${env:LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME}
+    LAZYSUSAN_SESSION_AWS_REGION: ${env:LAZYSUSAN_SESSION_AWS_REGION}
+    LAZYSUSAN_SESSION_STORAGE_BACKEND: ${env:LAZYSUSAN_SESSION_STORAGE_BACKEND}
+    LAZYSUSAN_LOG_LEVEL: ${env:LAZYSUSAN_LOG_LEVEL}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:*"
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${env:LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME}"
+
+resources:
+  Resources:
+    dynamoUsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+package:
+  exclude:
+    - "**/*.pyc"
+    - "**/*.swp"
+
+functions:
+  age:
+    handler: handler.main
