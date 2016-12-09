@@ -1,29 +1,3 @@
-# A sample for what a valid response object to Alexa looks like.  Note that the directives is only
-# applicable when playing audio back. Also note that the "response" object is what is taken
-# verbatim and sent back as the Alexa response in our Lambda functions (as json).
-#
-#sample:
-#  card:
-#    type:
-#    title:
-#    content:
-#  outputSpeech:
-#    type:
-#    text:
-#  reprompt:
-#    outputSpeech:
-#      type:
-#      text:
-#  shouldEndSession:
-#  directives:
-#   - type:
-#     playBehavior:
-#     audioItem:
-#       stream:
-#         token:
-#         url:
-#         offsetInMilliseconds:
-
 initialState:
   response:
     card:
