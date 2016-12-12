@@ -1,8 +1,6 @@
 import os
-import persistence
-
-
 from datetime import datetime
+import persistence #pylint: disable=I0011,relative-import
 
 
 class Session(object):
@@ -55,7 +53,7 @@ class Session(object):
                 memory = persistence.Memory()
                 memory.update(self.__event["session"]["attributes"])
                 return memory
-            except (KeyError, TypeError), err:
+            except (KeyError, TypeError):
                 pass
 
         return persistence.Memory()
@@ -69,14 +67,14 @@ class Session(object):
     def get_audio_offset(self):
         try:
             return self._backend["AudioPlayer"]["offsetInMilliseconds"]
-        except (KeyError, TypeError), err:
+        except (KeyError, TypeError):
             return 0
 
     def update_audio_state(self, context):
         # context may be None in certain requests. In that case we may just pass
         try:
             self._backend["AudioPlayer"] = context["AudioPlayer"]
-        except (KeyError, TypeError), err:
+        except (KeyError, TypeError):
             pass
 
     def update_state(self, state, context):

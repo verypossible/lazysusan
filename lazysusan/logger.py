@@ -10,7 +10,7 @@ def _is_configured():
 
 
 def _configure(level):
-    global _configured
+    global _configured #pylint: disable=I0011,global-statement
     if not _is_configured():
         logging.basicConfig(format="[%(levelname)s] %(filename)s %(message)s", level=level)
         _configured = True
@@ -21,7 +21,7 @@ def get_level():
     if not level.startswith("logging."):
         level = logging.WARN
     else:
-        level = eval(level)
+        level = eval(level) #pylint: disable=I0011,eval-used
     return level
 
 

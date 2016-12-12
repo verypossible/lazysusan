@@ -1,14 +1,9 @@
-import json
-import os
-import sys
-
 import yaml
 
-from constants import *
-from logger import get_logger
-from request import Request
-from response import build_response_payload
-from session import Session
+from .logger import get_logger
+from .request import Request
+from .response import build_response_payload
+from .session import Session
 
 
 _logger = get_logger()
@@ -55,7 +50,7 @@ class LazySusanApp(object):
 
     def build_response(self, request, session, intent_name, context, user_id):
         state = session.get_state()
-        _logger.info("Current state: %s" % (state, ))
+        _logger.info("Current state: %s", state)
 
         # Determine what our response is by looking up our current state followed by
         # the intent_name in the request. Each state must define a "default" branch.
@@ -66,8 +61,8 @@ class LazySusanApp(object):
         except KeyError:
             branch = branches["default"]
 
-        # Allow us to specifically short-circuit and *not* return a request. This is due
-        # to certain cases where a callback from Alexa does not accept any type of response. Typically
+        # Allow us to specifically short-circuit and *not* return a request. This is due to
+        # certain cases where a callback from Alexa does not accept any type of response. Typically
         # this is during audio playback for long-form audio.
         if branch is None:
             session.update_audio_state(context)
@@ -76,7 +71,7 @@ class LazySusanApp(object):
         # now branch is the next state
         if callable(branch):
             branch_or_response = branch(request, session, intent_name, context, user_id,
-                    self.__state_machine)
+                                        self.__state_machine)
             if isinstance(branch_or_response, dict):
                 return branch_or_response
             else:
@@ -97,7 +92,7 @@ class LazySusanApp(object):
         return response_payload
 
 
-    def handle(self, event, lambda_context=None):
+    def handle(self, event, lambda_context=None): #pylint: disable=locally-disabled,unused-argument
         """Main handler which receives initial request from Lambda.
 
         Route the incoming request based on type LaunchRequest, IntentRequest, etc.).
@@ -107,7 +102,7 @@ class LazySusanApp(object):
         :attr context: Lambda context
         """
         # Leave this in for logging
-        _logger.info("Event: %s" % (event, ))
+        _logger.info("Event: %s", event)
 
         request = Request(event["request"])
         context = event.get("context")
@@ -123,5 +118,5 @@ class LazySusanApp(object):
         session.save()
 
         # Leave this in for logging
-        _logger.info("Response: %s" % (response, ))
+        _logger.info("Response: %s", response)
         return response
