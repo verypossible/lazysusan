@@ -1,7 +1,7 @@
 import random
 
 
-def dad_joke(request, state_machine):
+def dad_joke(**kwargs):
     paths = (
         "billPath",
         "calendarPath",
