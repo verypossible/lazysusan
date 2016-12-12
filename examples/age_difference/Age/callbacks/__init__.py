@@ -13,7 +13,10 @@ from lazysusan.response import build_response_payload
 
 DOB_KEY = "LAST_DOB"
 
-def calc_difference(request, session, intent, context, user_id, state_machine):
+def calc_difference(**kwargs):
+    request = kwargs["request"]
+    session = kwargs["session"]
+    state_machine = kwargs["state_machine"]
     log = get_logger()
 
     date = request.get_slot_value("dob")
