@@ -70,8 +70,14 @@ class LazySusanApp(object):
 
         # now branch is the next state
         if callable(branch):
-            branch_or_response = branch(request, session, intent_name, context, user_id,
-                                        self.__state_machine)
+            branch_or_response = branch(
+                request=request,
+                session=session,
+                intent_name=intent_name,
+                context=context,
+                user_id=user_id,
+                state_machine=self.__state_machine
+            )
             if isinstance(branch_or_response, dict):
                 return branch_or_response
             else:
