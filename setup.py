@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='lazysusan',
     packages=find_packages(exclude=['tests', 'tests.*', 'examples', 'examples.*']),
-    version = '0.4',
+    version = '0.5',
     description = 'A library for authoring Alexa apps',
     author='Spartan Systems',
     author_email='sass@joinspartan.com',
