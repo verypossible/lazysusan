@@ -27,10 +27,16 @@ class Session(object):
 
     @property
     def last_request_time(self):
-        return self.get("LAST_REQUEST_TIME", datetime.now())
+        timestamp = self.get("LAST_REQUEST_TIME")
+
+        if not timestamp:
+            return datetime.now()
+
+        return datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S")
 
     @last_request_time.setter
     def last_request_time(self, timestamp):
+        timestamp = timestamp.replace(microsecond=0).isoformat()
         self.set("LAST_REQUEST_TIME", timestamp)
 
     def get(self, key, default=None):
