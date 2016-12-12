@@ -119,6 +119,8 @@ class LazySusanApp(object):
         if session.is_expired:
             session.clear()
 
+        session.last_request_time = request.timestamp
+
         response = self.build_response(request, session, request.intent_name, context, user_id)
 
         session.save()
