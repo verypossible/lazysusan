@@ -1,10 +1,11 @@
-import boto3
 import os
+import boto3
 
 
 class Memory(dict):
 
     def __init__(self, *args, **kwargs):
+        super(Memory, self).__init__(*args, **kwargs)
         self.update(*args, **kwargs)
 
     def connect(self, **kwargs):
@@ -17,7 +18,9 @@ class Memory(dict):
 class DynamoDB(dict):
 
     def __init__(self, *args, **kwargs):
+        super(DynamoDB, self).__init__(*args, **kwargs)
         self._db = None
+        self._table = None
 
     def connect(self, **kwargs):
         table_name = os.environ["LAZYSUSAN_SESSION_DYNAMODB_TABLE_NAME"]

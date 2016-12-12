@@ -16,7 +16,7 @@ DOB_KEY = "LAST_DOB"
 def calc_difference(request, session, intent, context, user_id, state_machine):
     log = get_logger()
 
-    date = get_slot_value(request, "dob")
+    date = request.get_slot_value("dob")
     if not date:
         log.error("Could  not find date in slots")
         return "goodBye"

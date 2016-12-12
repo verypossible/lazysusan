@@ -1,1 +1,1 @@
-from app import LazySusanApp
+from .app import LazySusanApp
