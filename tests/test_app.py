@@ -106,3 +106,9 @@ class TestInitialState(object):
         response = app.handle(launch_request)
         assert mock_session.clear.call_count == 1
         assert mock_session.save.call_count == 1
+
+    def test_session_last_request_time_is_set(self, app, mock_session_backend, launch_request):
+        launch_request["request"]["timestamp"] = "2000-01-01T00:00:00Z"
+        expected_dt = datetime(2000, 1, 1)
+        response = app.handle(launch_request)
+        assert mock_session_backend["LAST_REQUEST_TIME"] == expected_dt
