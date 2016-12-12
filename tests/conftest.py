@@ -39,6 +39,12 @@ def get_state(mocker):
 
 @pytest.fixture()
 def mock_session(mocker):
+    session = mocker.patch("lazysusan.app.Session")
+    return session.return_value
+
+
+@pytest.fixture()
+def mock_session_backend(mocker):
     mock_persistence = mocker.patch("lazysusan.persistence.Memory")
     backend = TestBackend()
     mock_persistence.return_value = backend

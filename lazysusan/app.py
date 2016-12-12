@@ -115,6 +115,8 @@ class LazySusanApp(object):
         user_id = LazySusanApp.get_user_id_from_event(event)
 
         session = Session(user_id, self.__session_key, event)
+        if session.is_expired:
+            session.clear()
 
         response = self.build_response(request, session, request.intent_name, context, user_id)
 

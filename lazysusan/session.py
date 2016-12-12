@@ -41,6 +41,10 @@ class Session(object):
     def set(self, key, val):
         self._backend[key] = val
 
+    def clear(self):
+        self._backend.clear()
+        self._backend["userId"] = self._user_id
+
     def get_backend(self):
         backend = os.environ.get("LAZYSUSAN_SESSION_STORAGE_BACKEND", "dynamodb")
 

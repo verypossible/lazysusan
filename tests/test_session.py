@@ -146,3 +146,9 @@ def test_is_expired_bad(session, mocker):
     mocker.patch.dict("os.environ", {"LAZYSUSAN_TTL_SECONDS": "abc1"})
     with pytest.raises(ValueError):
         session.is_expired
+
+
+def test_clear(session):
+    session._backend["barney"] = "rubble"
+    session.clear()
+    assert session._backend["userId"] == "testuser"

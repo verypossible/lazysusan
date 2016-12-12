@@ -1,6 +1,10 @@
 import os
 import pytest
 
+from datetime import (
+    datetime,
+    timedelta,
+)
 from lazysusan.app import LazySusanApp
 
 CWD = os.path.dirname(os.path.realpath(__file__))
@@ -45,29 +49,29 @@ class TestInitialState(object):
 
     EXPECTED_KEYS = ["outputSpeech", "shouldEndSession"]
 
-    def test_launch_request(self, app, mock_session, launch_request):
+    def test_launch_request(self, app, mock_session_backend, launch_request):
         response = app.handle(launch_request)
-        assert_response(response, "invalidIntent", mock_session, self.EXPECTED_KEYS)
+        assert_response(response, "invalidIntent", mock_session_backend, self.EXPECTED_KEYS)
 
-    def test_no_intent(self, app, mock_session, no_intent):
+    def test_no_intent(self, app, mock_session_backend, no_intent):
         response = app.handle(no_intent)
-        assert_response(response, "goodbyeIntent", mock_session, self.EXPECTED_KEYS)
+        assert_response(response, "goodbyeIntent", mock_session_backend, self.EXPECTED_KEYS)
 
-    def test_yes_intent(self, app, mock_session, yes_intent):
+    def test_yes_intent(self, app, mock_session_backend, yes_intent):
         response = app.handle(yes_intent)
         expected_keys = self.EXPECTED_KEYS + ["card"]
-        assert_response(response, "helloIntent", mock_session, expected_keys)
+        assert_response(response, "helloIntent", mock_session_backend, expected_keys)
 
-    def test_custom_intent(self, app, mock_session, custom_intent):
+    def test_custom_intent(self, app, mock_session_backend, custom_intent):
         response = app.handle(custom_intent)
-        assert_response(response, "callbackIntent", mock_session, self.EXPECTED_KEYS)
+        assert_response(response, "callbackIntent", mock_session_backend, self.EXPECTED_KEYS)
 
-    def test_dynamic_intent(self, app, mock_session, dynamic_intent):
+    def test_dynamic_intent(self, app, mock_session_backend, dynamic_intent):
         response = app.handle(dynamic_intent)
         expected_msg = "this is some dynamic content"
         assert response["response"]["outputSpeech"]["text"] == expected_msg
 
-    def test_audio_offset(self, app, mock_session, audio_offset_intent, mocker):
+    def test_audio_offset(self, app, mock_session_backend, audio_offset_intent, mocker):
         mock_get_offset = mocker.patch("lazysusan.session.Session.get_audio_offset")
         mock_get_offset.return_value = 111
 
@@ -82,14 +86,23 @@ class TestInitialState(object):
         }
         assert response["response"]["directives"] == [expected]
 
-    def test_playback_started(self, app, mock_session, playback_started_request):
+    def test_playback_started(self, app, mock_session_backend, playback_started_request):
         response = app.handle(playback_started_request)
         assert response is None
 
-    def test_playback_nearly_finished(self, app, mock_session, playback_nearly_finished_request):
+    def test_playback_nearly_finished(self, app, mock_session_backend,
+            playback_nearly_finished_request):
         response = app.handle(playback_nearly_finished_request)
         assert response is None
 
-    def test_playback_finished(self, app, mock_session, playback_finished_request):
+    def test_playback_finished(self, app, mock_session_backend, playback_finished_request):
         response = app.handle(playback_finished_request)
         assert response is None
+
+    def test_session_cleared_and_saved(self, app, mock_session, launch_request):
+        mock_session.is_expired = True
+        mock_session.get_state.return_value = "initialState"
+
+        response = app.handle(launch_request)
+        assert mock_session.clear.call_count == 1
+        assert mock_session.save.call_count == 1
