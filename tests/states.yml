@@ -45,6 +45,7 @@ goodbyeIntent:
   branches:
     default: initialState
 
+
 helloIntent:
   response:
     card:
@@ -56,7 +57,19 @@ helloIntent:
       text: hello
     shouldEndSession: True
   branches:
+    AudioPlayer.PlaybackNearlyFinished: nonState
     default: initialState
+
+nonState:
+  is_state: false
+  response:
+    outputSpeech:
+      type: PlainText
+      text: This isn't a state
+    shouldEndSession: True
+  branches:
+    LaunchRequest: initialState
+
 
 callbackIntent:
   response:

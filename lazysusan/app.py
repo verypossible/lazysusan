@@ -24,19 +24,11 @@ class LazySusanApp(object):
 
     @staticmethod
     def get_user_id_from_event(event):
-        """
-        Uncomment this if statement and populate with your skill's application ID to
-        prevent someone else from configuring a skill that sends requests to this
-        function.
-        """
-        # if (event["session"]["application"]["applicationId"] !=
-        #         "amzn1.echo-sdk-ams.app.[unique-value-here]"):
-        #     raise ValueError("Invalid Application ID")
-
-        # Note that session can be empty when we're playing long-form audio
+        """Lookup the userId in the request in multiple locations."""
         try:
             return event["session"]["user"]["userId"]
         except KeyError:
+            # Note that session can be empty when we're playing long-form audio
             pass
 
         try:
@@ -57,20 +49,20 @@ class LazySusanApp(object):
         branches = self.__state_machine[state]["branches"]
 
         try:
-            branch = branches[intent_name]
+            branch_name = branches[intent_name]
         except KeyError:
-            branch = branches["default"]
+            branch_name = branches["default"]
 
         # Allow us to specifically short-circuit and *not* return a request. This is due to
         # certain cases where a callback from Alexa does not accept any type of response. Typically
         # this is during audio playback for long-form audio.
-        if branch is None:
+        if branch_name is None:
             session.update_audio_state(context)
             return
 
-        # now branch is the next state
-        if callable(branch):
-            branch_or_response = branch(
+        # now branch_name is the next state
+        if callable(branch_name):
+            branch_name_or_response = branch_name(
                 request=request,
                 session=session,
                 intent_name=intent_name,
@@ -78,20 +70,23 @@ class LazySusanApp(object):
                 user_id=user_id,
                 state_machine=self.__state_machine
             )
-            if isinstance(branch_or_response, dict):
-                return branch_or_response
-            else:
-                # not it's just a key
-                branch = branch_or_response
+            if isinstance(branch_name_or_response, dict):
+                return branch_name_or_response
 
-        session.update_state(branch, context)
+            # now it's just a key
+            branch_name = branch_name_or_response
 
-        branch = self.__state_machine[branch]
+        branch = self.__state_machine[branch_name]
+
+        if branch.get("is_state", True):
+            session.update_state(branch_name)
+        session.update_audio_state(context)
+
         response = branch["response"]
 
-        if branch.get('get_audio_offset_from_session', False):
+        if branch.get("get_audio_offset_from_session", False):
             offset = session.get_audio_offset()
-            response['directives'][0]['audioItem']['stream']['offsetInMilliseconds'] = offset
+            response["directives"][0]["audioItem"]["stream"]["offsetInMilliseconds"] = offset
 
         response_payload = build_response_payload(response, session.get_state_params())
 
