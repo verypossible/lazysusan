@@ -83,12 +83,11 @@ class Session(object):
         except (KeyError, TypeError):
             pass
 
-    def update_state(self, state, context):
+    def update_state(self, state):
         self._backend.update({
             self.__session_key: state,
             "userId": self._user_id,
         })
-        self.update_audio_state(context)
 
     def save(self):
         self._backend.save()

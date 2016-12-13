@@ -66,6 +66,20 @@ class TestInitialState(object):
         response = app.handle(custom_intent)
         assert_response(response, "callbackIntent", mock_session_backend, self.EXPECTED_KEYS)
 
+    def test_cancel_intent_no_state_change(self, app, mock_session_backend,
+            playback_nearly_finished_request, get_state):
+        get_state.return_value = "helloIntent"
+        response = app.handle(playback_nearly_finished_request)
+
+        expected_audio_state = {
+            "playerActivity": "PLAYING",
+            "token": "test",
+            "offsetInMilliseconds": 41000,
+        }
+        assert "LAZYSUSAN_STATE" not in mock_session_backend
+        assert sorted(response["response"].keys()) == sorted(self.EXPECTED_KEYS)
+        assert mock_session_backend["AudioPlayer"] == expected_audio_state
+
     def test_dynamic_intent(self, app, mock_session_backend, dynamic_intent):
         response = app.handle(dynamic_intent)
         expected_msg = "this is some dynamic content"
