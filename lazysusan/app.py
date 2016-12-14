@@ -58,7 +58,7 @@ class LazySusanApp(object):
         # this is during audio playback for long-form audio.
         if branch_name is None:
             session.update_audio_state(context)
-            return
+            return {}
 
         # now branch_name is the next state
         if callable(branch_name):
