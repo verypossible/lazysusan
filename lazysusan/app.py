@@ -58,7 +58,10 @@ class LazySusanApp(object):
         # this is during audio playback for long-form audio.
         if branch_name is None:
             session.update_audio_state(context)
-            return {}
+            # For states where alexa does not want a response, we need to exit without returning
+            # anything to prevent an Alexa platform error. As of this time, this has not been
+            # documented clearly by Amazon.
+            raise SystemExit
 
         # now branch_name is the next state
         if callable(branch_name):
