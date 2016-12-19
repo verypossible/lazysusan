@@ -2,7 +2,10 @@ import yaml
 
 from .logger import get_logger
 from .request import Request
-from .response import build_response_payload
+from .response import (
+    build_empty_response,
+    build_response_payload,
+)
 from .session import Session
 
 
@@ -61,7 +64,7 @@ class LazySusanApp(object):
             # For states where alexa does not want a response, we need to exit without returning
             # anything to prevent an Alexa platform error. As of this time, this has not been
             # documented clearly by Amazon.
-            raise SystemExit
+            return build_empty_response()
 
         # now branch_name is the next state
         if callable(branch_name):

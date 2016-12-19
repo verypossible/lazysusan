@@ -1,3 +1,7 @@
+def build_empty_response():
+    return build_response_payload({"shouldEndSession": True}, {})
+
+
 def build_response_payload(speechlet_response, state):
     """Build a valid Alexa response given a speechlet data structure.
 
