@@ -102,16 +102,19 @@ class TestInitialState(object):
 
     def test_playback_started(self, app, mock_session_backend, playback_started_request):
         response = app.handle(playback_started_request)
-        assert response is None
+        assert response.get("sessionAttributes") == {}
+        assert response.get("response") == {"shouldEndSession": True}
 
     def test_playback_nearly_finished(self, app, mock_session_backend,
             playback_nearly_finished_request):
         response = app.handle(playback_nearly_finished_request)
-        assert response is None
+        assert response.get("sessionAttributes") == {}
+        assert response.get("response") == {"shouldEndSession": True}
 
     def test_playback_finished(self, app, mock_session_backend, playback_finished_request):
         response = app.handle(playback_finished_request)
-        assert response is None
+        assert response.get("sessionAttributes") == {}
+        assert response.get("response") == {"shouldEndSession": True}
 
     def test_session_cleared_and_saved(self, app, mock_session, launch_request):
         mock_session.is_expired = True
