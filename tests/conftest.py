@@ -39,7 +39,7 @@ def get_state(mocker):
 
 @pytest.fixture()
 def mock_session(mocker):
-    session = mocker.patch("lazysusan.app.Session")
+    session = mocker.patch("lazysusan.alexa_handler.Session")
     return session.return_value
 
 

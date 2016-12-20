@@ -1,5 +1,5 @@
 from lazysusan.helpers import build_response
-from lazysusan.response import build_response_payload
+from lazysusan.alexa_response import build_response_payload
 
 
 def do_callback(**kwargs):
