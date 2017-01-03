@@ -14,6 +14,8 @@ setup(
     ],
     tests_require=[
         'pytest>=3.0.4',
+        'pytest-cov>=2.4.0',
+        'pytest-mock>=1.5.0',
     ],
     classifiers=[
         'Programming Language :: Python',
