@@ -39,5 +39,50 @@ along with a custom intent of your own:
 Custom Slot Types
 =================
 
+When the Alexa platform assigns an intent to a user's input, you only receive
+that intent token in the JSON payload for your application. In a way this is a
+good thing because you are able to easily provide output for a wide range of
+input, but you aren't provided a means to accept more information about the
+user's intent. For example, if a user were to say "Alexa, ask recipe helper how
+to make scrambled eggs." Then if another user said "Alexa, tell recipe helper
+that I need help making fried eggs." How would you tell if a user wanted to make
+scrambled eggs or fried eggs? Your knee jerk reaction may be to create a
+different intent for each of these sayings, but doing so is risky because the
+Alexa platform may assign the wrong intent to the users input. This can be
+avoided by using custom slot types.
+
+Custom slot types allow you to define an array of key words that you are
+searching for in a user's input. Therefore in the previous example, you can use
+the same intent for both phrases, and assign "scrambled eggs" and "fried eggs"
+to the ``RECIPE_NAMES`` slot type. This allows you to gain more context on the
+user's intent for further processing.
+
+Custom slot types can be created on the interaction model screen by clicking on
+the "Add Slot Type" button and then providing a space delimited list of the
+keywords that you are looking for. In order to associate a custom slot type with
+an intent, you can modify the intent schema like the following example:
+
+::
+
+  {
+    "intents": [
+      { "intent": "AMAZON.YesIntent" },
+      { "intent": "AMAZON.NoIntent" },
+      {
+        "intent": "MyCustomIntent",
+        "slots": [
+          {
+            "name": "Recipe",
+            "type": "RECIPE_NAMES"
+          }
+        ]
+      }
+    ]
+  }
+
+This tells the Alexa platform that whenever ``MyCustomIntent`` is invoked by the
+user to look for a phrase that matches a value in ``RECIPE_NAMES``.
+
+
 Sample Utterances
 =================
