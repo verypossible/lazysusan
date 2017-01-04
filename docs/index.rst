@@ -15,6 +15,7 @@ Lazysusan is a Python framework for quickly building Amazon Alexa applications. 
    interaction_model
    example_app
    config
+   testing
    glossary
 
 
