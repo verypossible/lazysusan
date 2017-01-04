@@ -66,9 +66,9 @@ Make
 =====
 
 To keep you from having to script repetitive tasks with shell scripts, we
-recommend using `Make`_ for building your `Docker`_ container, executing deploys, and
-running test suites. We'll show an example ``Makefile`` on how this is useful. Just like Docker,
-this is optional.
+recommend using gnu ``Make`` for executing deploys,
+running test suites and other repetitive tasks. We'll show an example
+``Makefile`` on how this is useful. Just like Docker, this is optional.
 
 
 .. _AWS: https://aws.amazon.com/
@@ -76,7 +76,6 @@ this is optional.
 .. _Docker: https://www.docker.com/products/docker
 .. _joinspartan/serverless: https://hub.docker.com/r/joinspartan/serverless/
 .. _Serverless: https://serverless.com
-.. _Make: https://cmake.org/download/
 .. _Reverb.AI: https://reverb.ai/
 .. _Amazon Echo: https://www.amazon.com/Amazon-Echo-Bluetooth-Speaker-with-WiFi-Alexa/dp/B00X4WHP5E/
 .. _Amazon Echo Dot: https://www.amazon.com/All-New-Amazon-Echo-Dot-Add-Alexa-To-Any-Room/dp/B01DFKC2SO/
