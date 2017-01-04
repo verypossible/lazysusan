@@ -96,6 +96,8 @@ the logic of your Alexa application by looking at the intent of each request and
 accordingly.
 
 
+.. _intro-design:
+
 Lazysusan design
 ====================
 
