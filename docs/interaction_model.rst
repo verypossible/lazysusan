@@ -86,3 +86,20 @@ user to look for a phrase that matches a value in ``RECIPE_NAMES``.
 
 Sample Utterances
 =================
+
+Now that you know how to define intents and custom slot types, you will need to
+train the Alexa platform with what kinds of phrases invoke which intents. This
+is done through the sample utterances listing. Here is an example of the sample
+utterance format:
+
+::
+
+  IntentName blah blah blah {SlotName} blah
+  IntentName blah blah {SlotName} blah blah
+  DifferentIntent blah blah blah
+
+Here we see that each sample utterance is defined on its own line with the name
+of the intent at the beginning of the line with a sample phrase following the
+intent name (in all lower case). Custom slots are inserted into the sample
+utterance inside of curly braces with the slot name defined in the intent
+schema, not the name of the custom slot type.
