@@ -8,16 +8,19 @@ Before using Lazysusan there are a few services along with some software and
 hardware tools that you will in order to build skills for Alexa.
 
 
+Requirements
+================
+
 Amazon Web Services
-===================
+-------------------
 
 Lazysusan has been built so that it can be easily deployed as an `AWS`_ Python Lambda
 function. In order for the deployments to work, you will need an `AWS`_ account
-that has admin priviliges along with its public and private keys.
+that has admin privileges along with its public and private keys.
 
 
 Amazon Developer Account
-========================
+------------------------
 
 In order to deploy an Alexa skill, whether for testing or production use, you
 will need to configure a skill store listing for the skill. This listing will
@@ -32,7 +35,7 @@ to use a skill that has not yet been published.
 
 
 Alexa Enabled Device
-====================
+--------------------
 
 The best way to test your application is on the actual hardware people will be
 using it with. Therefore you will need to purchase an `Amazon Echo`_ or `Amazon Echo
@@ -41,14 +44,35 @@ computer. With that being said, we recommend using the actual hardware.
 
 
 Python 2.7
-============
+------------
 
 Since Lazysusan is a Python framework you'll need a Python 2.7 environment for testing and
 development. If you decide to use our Docker image this is already set up for you.
 
 
+Suggested options
+=================
+
+Serverless
+-------------
+
+Lazysusan is designed to use AWS Lambda for your Alexa applications. While setting up your own
+webserver and using Lazysusan is a possibility it really doesn't help matters much and significantly
+complicates the deployment increases work.
+
+In order to facilitate managing your Lambda functions we use and highly suggest the `Serverless`_
+framework.  Serverless is a NodeJS package which can be installed via ``npm``.  Again, it's possible
+to **not** use Serverless and manage Lambda deployments on your own, however there is no clear advantage
+to forging your own path.
+
+.. note::
+
+   These docs are written assuming you are using Serverless to manage and deploy AWS Lambda
+   functions
+
+
 Docker
-======
+------
 
 So that development with Lazysusan is as effortless as possible, we have created
 a `Docker`_ image that will help ease the pain of dependency management. See the
@@ -63,12 +87,13 @@ well.
 
 
 Make
-=====
+-----
 
 To keep you from having to script repetitive tasks with shell scripts, we
 recommend using gnu ``Make`` for executing deploys,
 running test suites and other repetitive tasks. We'll show an example
-``Makefile`` on how this is useful. Just like Docker, this is optional.
+``Makefile`` on how this is useful. Just like Docker this is optional and just like Python this is
+already installed and ready to use in the Docker image.
 
 
 .. _AWS: https://aws.amazon.com/
