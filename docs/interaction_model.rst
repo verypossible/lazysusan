@@ -103,3 +103,65 @@ of the intent at the beginning of the line with a sample phrase following the
 intent name (in all lower case). Custom slots are inserted into the sample
 utterance inside of curly braces with the slot name defined in the intent
 schema, not the name of the custom slot type.
+
+
+Recipe Helper Interaction Model
+===============================
+
+With the above information, we are ready to define the interaction model for the
+reciper helper skill.
+
+Intent Schema
+-------------
+
+::
+
+  {
+    "intents": [
+      { "intent": "AMAZON.YesIntent" },
+      { "intent": "AMAZON.NoIntent" },
+      {
+        "intent": "MyCustomIntent",
+        "slots": [
+          {
+            "name": "Recipe",
+            "type": "RECIPE_NAMES"
+          }
+        ]
+      }
+    ]
+  }
+
+Custom Slot Type
+----------------
+
+Name: ``RECIPE_NAMES``
+Content:
+
+::
+
+  scrambled eggs
+  fried eggs
+
+Sample Utterances
+-----------------
+
+::
+
+  MyCustomIntent i would like to make {Recipe}
+  MyCustomIntent i need to make {Recipe}
+  MyCustomIntent i need help making {Recipe}
+  MyCustomIntent help me make {Recipe}
+  MyCustomIntent how about {Recipe}
+  AMAZON.YesIntent yes
+  AMAZON.YesIntent yea
+  AMAZON.YesIntent yeah
+  AMAZON.YesIntent yup
+  AMAZON.YesIntent yes i am
+  AMAZON.YesIntent yea i am
+  AMAZON.YesIntent yeah i am
+  AMAZON.YesIntent yup i am
+  AMAZON.NoIntent no
+  AMAZON.NoIntent not yet
+  AMAZON.NoIntent not ready
+  AMAZON.NoIntent no i am not
