@@ -183,13 +183,13 @@ but in short this is all of the code you'll need for a basic Lazysusan app.
 
    def main(event, lambda_context):
        state_path = os.path.join(CWD, "states.yml")
-       os.environ["LAZYSUSAN_SESSION_STORAGE_BACKEND"] = "memory"
+       os.environ["LAZYSUSAN_SESSION_STORAGE_BACKEND"] = "cookie"
        app = LazySusanApp(state_path, session_key="FRIED_EGGS_STATE")
        response = app.handle(event)
        return response
 
 Because we're deploying our application code to AWS Lambda there is some system path munging needed
-in order for our application to find the needed libraries.  Lines 3-4 simple add the ``lib/``
+in order for our application to find the needed libraries.  Lines 4-5 simple add the ``lib/``
 directory to Lambda system path. You may recall that the ``lib/`` directory is where we installed
 our supporting packages such as ``lazysusan``.
 
@@ -208,7 +208,7 @@ defines the flow of our Alexa application in terms of the Voice User Interface.
 
 Line 12 sets an environment variable for session storage.  By default sessions will use DynamoDB as
 a storage backend...this requires additional setup which we don't need in this example application.
-By using ``memory`` the sessions are stored in the request/response cycle of the Alexa application.
+By using ``cookie`` the sessions are stored in the request/response cycle of the Alexa application.
 This allows us a very short-term session storage...as long as the application is executing and the
 user is interacting with the application the session is alive.  As soon as an application quits the
 session is erased.
@@ -216,7 +216,7 @@ session is erased.
 Lines 13-15 are quite simple.  The only thing to note is that you should set the ``session_key``
 variable to something which makes sense for your application.  This is the name of the key which
 stores the current state for a user in the session backend. This isn't important when using the
-``memory`` backend, however when using the ``dynamodb`` backend you will actually see this named
+``cookie`` backend, however when using the ``dynamodb`` backend you will actually see this named
 key in DynamoDB...so it's nice to have it named something which is clear and makes sense.
 
 
@@ -245,6 +245,8 @@ generated ``serverless.yml`` file and replace the contents with the following:
    functions:
      recipes:
        handler: handler.main
+       events:
+         - alexaSkill
 
 
 Deploy
