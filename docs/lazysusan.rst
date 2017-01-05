@@ -56,30 +56,6 @@ Let's take a look at an example file and walk through the details
         AMAZON.YesIntent: ingredientsScrambledEggs
         default: goodBye
 
-    ingredientsScrambledEggs:
-      response:
-        shouldEndSession: false
-        outputSpeech:
-          type: SSML
-          ssml: >
-            <speak>
-              For this recipe you will need a non stick frying pan, a spatula, a
-              bowl, a fork, and 2 eggs. Have you located all of these and are you
-              ready to begin?
-            </speak>
-        reprompt:
-          type: SSML
-          ssml: >
-            <speak>
-              For this recipe you will need a non stick frying pan, a spatula, a
-              bowl, a fork, and 2 eggs. Have you located all of these and are you
-              ready to begin?
-            </speak>
-      branches:
-        AMAZON.YesIntent: stepOneScrambledEggs
-        AMAZON.NoIntent: ingredientsScrambledEggs
-        default: goodBye
-
 ..  note::
 
     Every ``states.yml`` file *must* contain an ``initialState`` block which is the entry point to
@@ -88,39 +64,8 @@ Let's take a look at an example file and walk through the details
 A ``states.yml`` file will contain multiple blocks where each block has a unique name and
 corresponds to an Alexa request.
 
-In the example above we show two blocks. The ``initialState`` block is the response which is
-returned upon initial launch of the skill.  The ``ingredientsScrambledEggs`` block will be returned
-when the user is in the ``initialState`` state and triggers a ``AMAZON.YesIntent``.
 
-Following this logic, we can see that if the user is in the ``ingredientsScrambledEggs`` state and
-triggers an ``AMAZON.NoIntent`` they will be routed back to the same response. For example:
-
-::
-
-    user: Alexa, ask recipe helper how to make scrambled eggs
-    Alexa: Welcome to simple recipe helper. Would you like to make some scrambled eggs?
-    u: yes
-    Alexa: For this recipe you will need a non stick frying pan, a ...are you ready to begin?
-    u: no
-    Alexa: For this recipe you will need a non stick frying pan, a ...are you ready to begin?
-
-Additionally, any undefined intents in a given state will be routed to the ``default`` response.
-
-..  note::
-
-    Every response file *must* contain an ``default`` route/branch
-
-For example, assume we are in ``ingredientsScrambledEggs`` state and the user responds with
-something invalid:
-
-::
-
-    Alexa: For this recipe you will need a non stick frying pan, a ...are you ready to begin?
-    u: bananas
-    Alexa: Goodbye
-
-
-Response format
+Defining States
 ===================
 
 Lazysusan doesn't add any syntactic sugar or do any checking of the responses defined in your
@@ -178,4 +123,93 @@ skill execution is terminated at this state.
 Dynamic responses
 =================
 
-# TODO
+There are two types of dynamic responses:
+
+- `Dynamically Returning a State`_
+- `Return a Computed Response`_
+
+Both types of callbacks are refenced the same way in your ``states.yml`` file.
+In the ``branches`` section of the desired state, for the desired intent, you
+will reference your callback using the following format:
+
+::
+
+  !!python/name:callbacks.name_of_function
+
+This format assumes that you have a ``callbacks`` folder for all of your dynamic
+responses and that all of them can be retrieved from the ``__init__.py`` file.
+
+Dynamically Returning a State
+-----------------------------
+
+The easiest class of dynamic responses is taking slot value input and then
+returning the desired static state for that input. For example you could have a
+callback function defined as:
+
+..  code-block:: python
+    :linenos:
+
+    def choose_recipe(request, *args, **kwargs):
+        slot = (request.get_slot_value("Recipes")).lower()
+
+        if "scrambled" in slot:
+            return "ingredientsScrambledEggs"
+        if ("fried" in slot or "fry" in slot):
+            return "ingredientsFriedEggs"
+
+        return "invalidChoosePath"
+
+This assumes that if you will have ``ingredientsScrambledEggs`` and
+``ingredientsFriedEggs`` states defined in your ``states.yml`` file and will
+tell the framework to transition to that state.
+
+
+Return a Computed Response
+--------------------------
+
+For more complex responses, you can write a callback function that will modify a
+predefined shell state, which you will need to define in your ``states.yml``
+file, for computed responses. An example callback function may look like:
+
+..  code-block:: python
+    :linenos:
+
+    import yaml
+    from lazysusan.logger import get_logger
+    from lazysusan.response import build_response_payload
+
+
+    def compute_recipe(offset=0, **kwargs):
+        request = kwargs["request"]
+        session = kwargs["session"]
+        state_machine = kwargs["state_machine"]
+        log = get_logger()
+
+        log.debug("Set Computed Recipe")
+        response = state_machine["preDefined"]["response"]
+
+        response["outputSpeech"]["SSML"] = """
+          <speak>
+            This is some dummy content to show that you can return a dynamic
+            response.
+          </speak>
+        """
+
+        session.update_state("goodBye")
+        return build_response_payload(response, session.get_state_params())
+
+While this is a fairly simple example, there are a few things to take note of.
+
+First, since this is a Python function, you can perform any calculations, api calls,
+etc. that you need to make in or to generate a response.
+
+Second, ``state_machine["preDefined"]`` is defined in your ``states.yml`` file
+and you have full access to it. This way you can get some boilerplate definition
+out of the way, or you can do it the hard way and define the dict within this
+function.
+
+Third, you are responsible for updating the state. This allows you to perform
+more fine tuned state transitions.
+
+Finally, you are responsible for building the response payload. We have written
+a helper function build this for you.
