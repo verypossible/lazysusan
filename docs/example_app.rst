@@ -4,8 +4,21 @@
 Example Application
 ===============================
 
-Using Lazysusan may be best explained by walking through an example. In this example, we'll build
-an Alexa skill which walks you through the steps on how to scramble an egg.
+Now that we have covered the basics, here is a step by step example that goes
+through how to create a simple Lazysusan application. Since all of the topics have
+already been covered, this will mostly be a lot of terminal commands and files
+to copy and paste.
+
+
+Repo setup
+=============
+
+Let's add some of the boilerplate and get ready to write our application:
+
+::
+
+    $ mkdir recipe_helper
+    $ cd recipe_helper
 
 
 Docker setup
@@ -26,15 +39,8 @@ we'll be using ``1.4``:
     $ docker pull joinspartan/serverless:1.4
 
 
-Repo setup
-=============
-
-Let's add some of the boilerplate and get ready to write our applicaiton:
-
-::
-
-    $ mkdir recipe_helper
-    $ cd recipe_helper
+Makefile
+===============
 
 There are a few things we'll need to do multiple times such as deploying our application to AWS
 Lambda, updating supporting libraries, etc. The ``Makefile`` will make most common tasks much
@@ -255,6 +261,217 @@ generated ``serverless.yml`` file and replace the contents with the following:
          - alexaSkill
 
 
+States
+=========
+
+In the ``src`` directory, create a file called ``states.yml`` with the following
+content:
+
+.. code-block:: yaml
+  :linenos:
+
+  initialState:
+    response:
+      shouldEndSession: false
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            Welcome to simple recipe helper. Would you like to make some scrambled
+            eggs?
+          </speak>
+      reprompt:
+        type: SSML
+        ssml: >
+          <speak>
+            Would you like to make some scrambled eggs?
+          </speak>
+    branches:
+      AMAZON.YesIntent: ingredientsScrambledEggs
+      default: goodBye
+
+  ingredientsScrambledEggs:
+    response:
+      shouldEndSession: false
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            For this recipe you will need a non stick frying pan, a spatula, a
+            bowl, a fork, and 2 eggs. Have you located all of these and are you
+            ready to begin?
+          </speak>
+      reprompt:
+        type: SSML
+        ssml: >
+          <speak>
+            For this recipe you will need a non stick frying pan, a spatula, a
+            bowl, a fork, and 2 eggs. Have you located all of these and are you
+            ready to begin?
+          </speak>
+    branches:
+      AMAZON.YesIntent: stepOneScrambledEggs
+      AMAZON.NoIntent: ingredientsScrambledEggs
+      default: goodBye
+
+  stepOneScrambledEggs:
+    response:
+      shouldEndSession: false
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            Without getting the egg shell into the bowl, crack the first egg into
+            the bowl.
+            <break time="3s" />
+            Repeat this for the second egg.
+            <break time="3s" />
+            Are you ready for the next step?
+          </speak>
+      reprompt:
+        type: SSML
+        ssml: >
+          <speak>
+            Without getting the egg shell into the bowl, crack the first egg into
+            the bowl.
+            <break time="3s" />
+            Repeat this for the second egg.
+            <break time="3s" />
+            Are you ready for the next step?
+          </speak>
+    branches:
+      AMAZON.YesIntent: stepTwoScrambledEggs
+      AMAZON.NoIntent: stepOneScrambledEggs
+      default: goodBye
+
+  stepTwoScrambledEggs:
+    response:
+      shouldEndSession: false
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            Take the fork and whisk the eggs in the bowl until the egg yolks are
+            mixed with the egg whites.
+            <break time="5s" />
+            Are you ready for the next step?
+          </speak>
+      reprompt:
+        type: SSML
+        ssml: >
+          <speak>
+            Take the fork and whisk the eggs in the bowl until the egg yolks are
+            mixed with the egg whites.
+            <break time="5s" />
+            Are you ready for the next step?
+          </speak>
+    branches:
+      AMAZON.YesIntent: stepThreeScrambledEggs
+      AMAZON.NoIntent: stepTwoScrambledEggs
+      default: goodBye
+
+  stepThreeScrambledEggs:
+    response:
+      shouldEndSession: false
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            Pour the beaten eggs into the non stick frying pan.
+            <break time="5s" />
+            Are you ready for the next step?
+          </speak>
+      reprompt:
+        type: SSML
+        ssml: >
+          <speak>
+            Pour the beaten eggs into the non stick frying pan.
+            <break time="5s" />
+            Are you ready for the next step?
+          </speak>
+    branches:
+      AMAZON.YesIntent: stepFourScrambledEggs
+      AMAZON.NoIntent: stepThreeScrambledEggs
+      default: goodBye
+
+  stepFourScrambledEggs:
+    response:
+      shouldEndSession: false
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            Take the non stick frying pan and place it on one of the eyes of your
+            cook top. Make sure to turn on the eye to low heat.
+            <break time="5s" />
+            Are you ready for the next step?
+          </speak>
+      reprompt:
+        type: SSML
+        ssml: >
+          <speak>
+            Take the non stick frying pan and place it on one of the eyes of your
+            cook top. Make sure to turn on the eye to low heat.
+            <break time="5s" />
+            Are you ready for the next step?
+          </speak>
+    branches:
+      AMAZON.YesIntent: stepFiveScrambledEggs
+      AMAZON.NoIntent: stepFourScrambledEggs
+      default: goodBye
+
+  stepFiveScrambledEggs:
+    response:
+      shouldEndSession: false
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            Occasionally stir and flip the eggs in the frying pan with your
+            spatula to make sure they cook evenly while slightly increasing the
+            heat of the cooking eye once every minute.
+            <break time="5s" />
+            Are you ready for the next step?
+          </speak>
+      reprompt:
+        type: SSML
+        ssml: >
+          <speak>
+            Occasionally stir and flip the eggs in the frying pan with your
+            spatula to make sure they cook evenly while slightly increasing the
+            heat of the cooking eye once every minute.
+            <break time="5s" />
+            Are you ready for the next step?
+          </speak>
+    branches:
+      AMAZON.YesIntent: stepSixScrambledEggs
+      AMAZON.NoIntent: stepFiveScrambledEggs
+      default: goodBye
+
+  stepSixScrambledEggs:
+    response:
+      shouldEndSession: true
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            The scrambled eggs will be done when they are no longer runny. When
+            they are done, transfer them to a plate and enjoy.
+            <break time="5s" />
+            Thanks for trying simple recipe helper.
+          </speak>
+
+  goodBye:
+    response:
+      shouldEndSession: true
+      outputSpeech:
+        type: SSML
+        ssml: >
+          <speak>
+            Thanks for trying simple recipe helper.
+          </speak>
+
+
 Deploy
 ===========
 
@@ -306,7 +523,7 @@ Configuring Alexa
 ==================
 
 At this point your backend system is fully ready to handle Alexa requests. Provided your Alexa app
-is configured correctly everything should be working.
+is configured correctly in the Amazon Developer portal everything should be working.
 
 
 Cloud Watch
