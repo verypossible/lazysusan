@@ -128,6 +128,52 @@ Lazysusan doesn't add any syntactic sugar or do any checking of the responses de
 unadulterated.  Therefore, it's your responsibility to make sure the response is valid and structured
 properly according to Amazon's latest specs.
 
+States can be declared using this format:
+
+::
+
+  stateName:
+    response:
+      ...
+    is_state: [True|False]
+    branches:
+      ...
+
+The ``stateName`` is required as it is how each state is identified. These names
+are also used when defining ``branches``.
+
+Underneath the ``stateName`` there are three possible key choices: ``response``,
+``is_state``, and ``branches``.
+
+response
+--------
+
+The ``response`` key is the response that is returned to the Alexa device.
+Lazysusan will not perform any major alterations to this construct other than
+converting it to JSON to be returned to the requesting device. Therefore, it is
+your responsibility to make sure your responses adhere to the Alexa platform
+schema for defining a response. This is extremely powerful because you are able
+to use the latest API functionality from Amazon without needing to update
+Lazysusan.
+
+is_state
+--------
+
+This key will default to ``True`` so you only need to set it if you need value
+to be ``False``. When ``is_state`` is set to ``False``, the response will be
+returned, but the cookie or DynamoDB session will not be updated and state
+transition will not occur. This is primarily used when dealing with long form
+audio callbacks.
+
+branches
+--------
+
+Underneath the branches key will be a list of intent - state pairs. These are
+used to say that when I am in state ``stateName`` and the user has invoked
+intent ``A``, transition to the state for intent ``A`` or fallback to the
+``default``. It is recommended to always provide a ``default`` branch unless
+skill execution is terminated at this state.
+
 
 Dynamic responses
 =================
