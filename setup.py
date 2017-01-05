@@ -2,7 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='lazysusan',
-    packages=find_packages(exclude=['tests', 'tests.*', 'examples', 'examples.*']),
+    packages=find_packages(exclude=[
+        'docs', 'docs.*',
+        'examples', 'examples.*',
+        'tests', 'tests.*',
+    ]),
     version = '0.6',
     description = 'A library for authoring Alexa apps',
     author='Spartan Systems',
@@ -14,6 +18,8 @@ setup(
     ],
     tests_require=[
         'pytest>=3.0.4',
+        'pytest-cov>=2.4.0',
+        'pytest-mock>=1.5.0',
     ],
     classifiers=[
         'Programming Language :: Python',
