@@ -16,7 +16,7 @@ On this screen you are able to enable and disable your skill for testing on
 Alexa enabled devices (we recommend that you always leave this option enabled
 and create different production and development versions of your skill). There
 is also a voice simulator so that you can hear how Alexa will pronounce certain
-output before you deployment.
+output before you update and deploy.
 
 The most helpful feature on this screen is the service simulator. Here are you
 able to enter your sample utterances, or variations of them, to see what the

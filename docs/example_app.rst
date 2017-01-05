@@ -5,7 +5,7 @@ Example Application
 ===============================
 
 Using Lazysusan may be best explained by walking through an example. In this example, we'll build
-an Alexa skill which walks you through the steps on how to fry an egg.
+an Alexa skill which walks you through the steps on how to scramble an egg.
 
 
 Docker setup
@@ -18,7 +18,7 @@ you up and running faster. Our Docker image is set up with:
 - Python 2.7 and some helper packages
 
 Assuming you have Docker installed on your system, pull the `joinspartan/serverless`_ image. It's
-suggested you use a specific  tag which corresponds to a specific version of Serverless. Here,
+Suggested you use a specific  tag which corresponds to a specific version of Serverless. Here,
 we'll be using ``1.4``:
 
 ::
@@ -33,15 +33,15 @@ Let's add some of the boilerplate and get ready to write our applicaiton:
 
 ::
 
-    $ mkdir fried_eggs
-    $ cd fried_eggs
+    $ mkdir recipe_helper
+    $ cd recipe_helper
 
 There are a few things we'll need to do multiple times such as deploying our application to AWS
 Lambda, updating supporting libraries, etc. The ``Makefile`` will make most common tasks much
 easier and also set you up to deploy your Lambda functions to different "environments" with
 different variables.
 
-This ``Makefile`` will be the first file in the ``fried_eggs`` directory:
+This ``Makefile`` will be the first file in the ``recipe_helper`` directory:
 
 ::
 
@@ -57,7 +57,7 @@ This ``Makefile`` will be the first file in the ``fried_eggs`` directory:
             -v `pwd`:/code \
             --env ENV=$(ENV) \
             --env-file envs/$2 \
-            --name=age-serverless-$(ENV) $(NAME) $1
+            --name=recipe-helper-serverless-$(ENV) $(NAME) $1
 
 
     libs :
@@ -134,9 +134,9 @@ Now, we can start a Docker container and start bootstrapping our application:
 ::
 
     $ ENV=dev make shell
-    docker run --rm -it -v `pwd`:/code --env ENV=dev --env-file envs/dev --name=age-serverless-dev "joinspartan/serverless:1.4" bash
+    docker run --rm -it -v `pwd`:/code --env ENV=dev --env-file envs/dev --name=recipe-helper-serverless-dev "joinspartan/serverless:1.4" bash
     root@9fcf3335e5aa:/code#
-    root@9fcf3335e5aa:/code# sls create --template aws-python -p src -n fried_eggs
+    root@9fcf3335e5aa:/code# sls create --template aws-python -p src -n recipe_helper
 
 You can see both in the container and on your local host system that ``src`` directory was created
 with two files:
@@ -144,8 +144,8 @@ with two files:
 ::
 
     $ ls -l src/
-    -rw-r--r--   1 brianz  staff   490 Jan  4 11:54 handler.py
-    -rw-r--r--   1 brianz  staff  2308 Jan  4 11:54 serverless.yml
+    -rw-r--r--   1 user  staff   490 Jan  4 11:54 handler.py
+    -rw-r--r--   1 user  staff  2308 Jan  4 11:54 serverless.yml
 
 We'll edit these files soon.  Next, we'll need to setup our supporting libraries which are dependencies for your application
 code.  These are listed out in the ``Makefile`` :makevar:`libs` directive.
@@ -206,12 +206,18 @@ which is our entry point into the application.
 One line 11 we tell Lazysusan where our main ``states.yml`` file is.  This file is criticial and
 defines the flow of our Alexa application in terms of the Voice User Interface.
 
-Line 12 sets an environment variable for session storage.  By default sessions will use DynamoDB as
+Line 12 sets an environment variable for session storage. By default sessions will use DynamoDB as
 a storage backend...this requires additional setup which we don't need in this example application.
 By using ``cookie`` the sessions are stored in the request/response cycle of the Alexa application.
 This allows us a very short-term session storage...as long as the application is executing and the
-user is interacting with the application the session is alive.  As soon as an application quits the
+user is interacting with the application the session is alive. As soon as an application quits the
 session is erased.
+
+.. note::
+
+  Line 12 could be removed and set using the environment variable file. However,
+  this would require some changes to the serverless deployment process so the
+  environment variable is properly set in the AWS Lambda function.
 
 Lines 13-15 are quite simple.  The only thing to note is that you should set the ``session_key``
 variable to something which makes sense for your application.  This is the name of the key which
@@ -271,7 +277,7 @@ in the same directory as the ``Makefile`` we'll execute ``make deploy``:
     ...................
     Serverless: Stack update finished...
     Service Information
-    service: FriedEggs
+    service: Recipes
     stage: dev
     region: us-east-1
     api keys:
@@ -279,7 +285,7 @@ in the same directory as the ``Makefile`` we'll execute ``make deploy``:
     endpoints:
       None
     functions:
-      FriedEggs-dev-recipes: arn:aws:lambda:us-east-1:234123421348:function:FriedEggs-dev-recipes
+      Recipes-dev-recipes: arn:aws:lambda:us-east-1:234123421348:function:Recipes-dev-recipes
 
 Make note of the Lambda ``arn`` in the last line. This is the ``arn`` which you'll need to plug
 into your Alexa skill's "Configuraton -> Endpoint"
@@ -292,8 +298,8 @@ Once the initial deploy is done you'll likely be updating code and need to redep
 accomplished by using the ``make function`` target.  This will re-upload your application code to
 the Lambda function and takes 5-10 seconds usually.
 
-If you make any changes to the actual stack, (i.e., adding a DynamoDB table or the like) you'll
-want to do an ``make deploy`` again.
+If you make any changes to the actual stack, (i.e., adding a DynamoDB table, updating an envrionment
+variable, or the like) you'll want to do an ``make deploy`` again.
 
 
 Configuring Alexa

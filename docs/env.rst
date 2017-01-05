@@ -55,7 +55,7 @@ LAZYSUSAN_SESSION_STORAGE_BACKEND
 =================================
 
 This evironment variable is optional and determines how Lazysusan sessions will
-be handled throughout the skill lifecycle. They available values are:
+be handled throughout the skill lifecycle. The available values are:
 
 ``memory``: No session information will be tracked, the ``initialState`` will be
 used to drive all state transition throughout the skill.

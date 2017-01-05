@@ -58,7 +58,7 @@ Serverless
 
 Lazysusan is designed to use AWS Lambda for your Alexa applications. While setting up your own
 webserver and using Lazysusan is a possibility it really doesn't help matters much and significantly
-complicates the deployment increases work.
+complicates the deployment process.
 
 In order to facilitate managing your Lambda functions we use and highly suggest the `Serverless`_
 framework.  Serverless is a NodeJS package which can be installed via ``npm``.  Again, it's possible

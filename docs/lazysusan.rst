@@ -18,14 +18,14 @@ Static responses
 =================
 
 In a very simple Alexa skill responses will be static, meaning they are predetermined and never
-change. An example of this would be our fried eggs example:
+change. An example of this would be our scrambled eggs example:
 
 ::
 
     user: Alexa, ask recipe helper how to make scrambled eggs
     Alexa: Welcome to simple recipe helper. Would you like to make some scrambled eggs?
 
-In this example the steps to make fried eggs will never change.
+In this example the steps to make scrambled eggs will never change.
 
 To build an app such as this we simply define the responses in a file names ``states.yml``.  This
 file may be named anything really...eventually you will put the name and full path to this file in
