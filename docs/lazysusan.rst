@@ -1,17 +1,17 @@
 .. _lazysusan:
 
-============================
-Lazysusan programming model
-============================
+===================================
+Lazysusan application structure
+===================================
 
 The Lazysusan framework mostly revolves around a yaml file where you configure how your Alexa skill
-should behave. As noted in the :ref:`intro-design` section Lazysusan will inspect the user's
+should behave. As noted in the :ref:`intro` section Lazysusan will inspect the user's
 current state, current Intent and then lookup how to respond to the request.
 
 There are different classes of responses which Lazysusan supports:
 
-- Static
-- Dynamic
+- `Static responses`_
+- `Dynamic responses`_
 
 
 Static responses

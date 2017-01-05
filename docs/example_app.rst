@@ -309,5 +309,12 @@ At this point your backend system is fully ready to handle Alexa requests. Provi
 is configured correctly everything should be working.
 
 
+Cloud Watch
+===========
+
+If you have the ``LAZYSUSAN_LOG_LEVEL`` environment variable for your AWS Lambda
+function set to ``logging.INFO`` you will be able to read fairly detailed logs
+that have been created by your Alexa skill.
+
 .. _Serverless: https://serverless.com
 .. _joinspartan/serverless: https://hub.docker.com/r/joinspartan/serverless/

@@ -12,98 +12,15 @@ function) and that endpoint responds with a specific `json` response.
 
    Lazysusan helps you digest these requests and respond appropriately.
 
-
-Alexa overview
-=================
-
-Covering the details of building apps for Alexa is out of scope for this document. However, we will
-cover the very high level details.
-
-Before anything else you must first design an :term:`Interaction model`. This model will map
-natural language phrases to an :term:`Intent`. It's important to understand that an :term:`Intent`
-is determined by the Alexa platform after listening to the user's speech and working it's magic.
-After the Alexa platform has determined what the user's intent is based on what they said, it will
-send your endpoint an ``IntentRequest`` with the named ``Intent`` inside of the payload.
-
-Let's look at an example:
-
-::
-
-    {
-      "session": {
-        "new": false,
-        "sessionId": "amzn1.echo-api.session.2a0bb3c1-94a4-4e7e-a631-cb692b573deb",
-        "application": {
-          "applicationId": "amzn1.ask.skill.234q1bff-d9bd-445b-84ad-f3312ba343aa"
-        },
-        "user": {
-          "userId": "amzn1.ask.account.WWOJTSRCEIMTTKWHGM3YX5HMXQ"
-        },
-        "attributes": {
-          "AGE_STATE": "initialState"
-        }
-      },
-      "request": {
-        "locale": "en-US",
-        "timestamp": "2016-12-14T00:19:59Z",
-        "type": "IntentRequest",
-        "requestId": "amzn1.echo-api.request.3de78bf9-f0ab-4353-9528-9ebb6da92ea6",
-        "intent": {
-          "slots": {
-            "dob": {
-              "name": "dob",
-              "value": "1973-08-15"
-            }
-          },
-          "name": "MyAgeIntent"
-        }
-      },
-      "version": "1.0",
-      "context": {
-        "AudioPlayer": {
-          "playerActivity": "IDLE"
-        },
-        "System": {
-          "device": {
-            "supportedInterfaces": {
-              "AudioPlayer": {}
-            }
-          },
-          "application": {
-            "applicationId": "amzn1.ask.skill.234q1bff-d9bd-445b-84ad-f3312ba343aa"
-          },
-          "user": {
-            "userId": "amzn1.ask.account.WWOJTSRCEIMTTKWHGM3YX5HMXQ"
-          }
-        }
-      }
-    }
-
-
-In this request, the user has triggered a ``MyAgeIntent`` intent with a slot value of
-``1973-08-15``.  Each request may or may not have a ``slot``...these are defined in your
-:term:`Interaction model` in the Alexa developer portal.
-
-There are several built-in intents which are at your disposal from Amazon. A couple of very basic
-examples:
-
-- ``AMAZON.YesIntent``
-- ``AMAZON.NoIntent``
-
-As you can likely guess, if a user says ``yes``, ``sure``, ``yes, please`` or any other type of
-affirmation, a ``AMAZON.YesIntent`` intent is sent to your endpoint. As the developer, you design
-the logic of your Alexa application by looking at the intent of each request and responding
-accordingly.
-
-
-.. _intro-design:
-
-Lazysusan design
-====================
-
 Lazysusan is designed mainly around a yaml configuration file which defines how your application
 will respond to different intents. Additionally, Lazysusan can keep track of the user's current
 state in your application where "state" really means the last used intent.
+
+There are two main components in any Lazysusan applicaiton:
+
+- A ``states.yml`` file which defines how users will be directed through your Alexa skill
+- A ``handler.py`` file which used the ``LazySusanApp`` class to digest requests and produce
+  responses in combination with ``states.yml``
 
 To understand Lazysusan applications and how to author your configuration yaml file it's necessary
 to understand how Lazysusan determines the response to send. The following sequence is the process
@@ -124,53 +41,68 @@ The ``states.yaml`` file which would drive this interaction would look like the 
 
     initialState:
       response:
+        shouldEndSession: false
         outputSpeech:
-          type: PlainText
-          text: What is the best Alexa Python framework?
-        shouldEndSession: False
+          type: SSML
+          ssml: >
+            <speak>
+              Welcome to simple recipe helper. Would you like to make some scrambled
+              eggs?
+            </speak>
+        reprompt:
+          type: SSML
+          ssml: >
+            <speak>
+              Would you like to make some scrambled eggs?
+            </speak>
       branches:
-        SomeIntent: answerToQuestion
-        default: initialState
+        AMAZON.YesIntent: ingredientsScrambledEggs
+        default: goodBye
 
-    answerToQuestion:
+    ingredientsScrambledEggs:
       response:
+        shouldEndSession: false
         outputSpeech:
-          type: PlainText
-          text: Would you like to quit now?
-        shouldEndSession: False
+          type: SSML
+          ssml: >
+            <speak>
+              For this recipe you will need a non stick frying pan, a spatula, a
+              bowl, a fork, and 2 eggs. Have you located all of these and are you
+              ready to begin?
+            </speak>
+        reprompt:
+          type: SSML
+          ssml: >
+            <speak>
+              For this recipe you will need a non stick frying pan, a spatula, a
+              bowl, a fork, and 2 eggs. Have you located all of these and are you
+              ready to begin?
+            </speak>
       branches:
-        AMAZON.YesIntent: goodBye
-        default: answerToQuestion
-
-    goodBye:
-      response:
-        outputSpeech:
-          type: PlainText
-          text: Thanks for using MyApp, goodbye
-        shouldEndSession: True
-      branches:
-        default: initialState
-
+        AMAZON.YesIntent: stepOneScrambledEggs
+        AMAZON.NoIntent: ingredientsScrambledEggs
+        default: goodBye
 
 The exact details for an interaction:
 
-- User launches the Alexa skill (i.e., "Alexa, open MyApp" -> ``LaunchRequest``)
+- User launches the Alexa skill (i.e., "Alexa, open recipe helper" -> ``LaunchRequest``)
 - Lazysusan picks up the ``LaunchRequest`` and maps that to the ``initialState`` response.
   Lazysusan saves the current state as ``initialState``.
-- MyApp creates a response based on the contents of the yaml file (i.e.,
-  "What is the best Alexa Python framework?")
-- User responds to the question and triggers a new Intent (i.e., "Lazysusan" -> ``SomeIntent``)
-- MyApp picks up the ``SomeIntent`` in the request. It also knows the current state is
-  ``initialState``. Lazysusan finds that it should respond with the ``answerToQuestion`` block with
-  this combination of Intent and state. Lazysusan saves the current state as ``answerToQuestion`` and
-  responds based on the contents of the ``answerToQuestion`` block in the yaml file.
-  (i.e., "Would you like to quit now?")
+- RecipeHelper creates a response based on the contents of the yaml file (i.e.,
+  "Welcom to simple recipe helper. Would you like to make some scrambled eggs?")
 - User responds to the question and triggers a new Intent (i.e., "yes" -> ``AMAZON.YesIntent``)
 - MyApp picks up the ``AMAZON.YesIntent`` in the request. It also knows the current state is
-  ``answerToQuestion``. With these two pieces of information it finds that it should reply with the
-  ``goodBye`` message.
-  (i.e., "Thanks for using MyApp, goodbye")
-- Lazysusan saves the current state as ``goodBye`` before sending response
+  ``initialState``. Lazysusan finds that it should respond with the ``ingredientsScrambledEggs`` block with
+  this combination of Intent and state. Lazysusan saves the current state as
+  ``ingredientsScrambledEggs`` and
+  responds based on the contents of the ``ingredientsScrambledEggs`` block in the yaml file.
+  (i.e., "For this recipe you will need a non stick frying pan...are you ready to begin?")
+- User responds to the question and triggers another request with a new Intent
+  (i.e., "yes" -> ``AMAZON.YesIntent``)
+- MyApp picks up the ``AMAZON.YesIntent`` in the request. It also knows the current state is
+  ``ingredientsScrambledEggs``. With these two pieces of information it finds that it should reply with the
+  ``stepOneScrambledEggs`` message (not shown).
+- Lazysusan saves the current state as ``stepOneScrambledEggs`` before sending response
 
 ::
 
@@ -188,19 +120,25 @@ The exact details for an interaction:
             |
             |
             v
-      +-----+------+
-      | SomeIntent |          # map SomeIntent to answerToQuestion response
-      +-----+------+
+    +-------+-------+
+    | AMZ.YesIntent |       # map AMAZON.YesIntent to ingredientsScrambledEggs response
+    +-------+-------+
             |
             |
             v
-         response           # current state = answerToQuestion
+         response           # current state = ingredientsScrambledEggs
             |
             |
             v
     +-------+-------+
-    | AMZ.YesIntent |       # map AMAZON.YesIntent to goodBye
+    | AMZ.YesIntent |       # map AMAZON.YesIntent to stepOneScrambledEggs
     +-------+-------+
             |
             v
-         response           # current state == goodBye
+         response           # current state == stepOneScrambledEggs
+            |
+            |
+            v
+         CONTINUE
+
+

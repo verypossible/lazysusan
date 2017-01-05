@@ -7,6 +7,10 @@ Prerequisites
 Before using Lazysusan there are a few services along with some software and
 hardware tools that you will in order to build skills for Alexa.
 
+.. note::
+
+   These docs are written assuming you are using all of the `Suggested options`_
+
 
 Requirements
 ================
@@ -65,11 +69,6 @@ framework.  Serverless is a NodeJS package which can be installed via ``npm``.  
 to **not** use Serverless and manage Lambda deployments on your own, however there is no clear advantage
 to forging your own path.
 
-.. note::
-
-   These docs are written assuming you are using Serverless to manage and deploy AWS Lambda
-   functions
-
 
 Docker
 ------
@@ -91,8 +90,8 @@ Make
 
 To keep you from having to script repetitive tasks with shell scripts, we
 recommend using gnu ``Make`` for executing deploys,
-running test suites and other repetitive tasks. We'll show an example
-``Makefile`` on how this is useful. Just like Docker this is optional and just like Python this is
+running test suites and other repetitive tasks. You can see an example
+``Makefile`` in the :ref:`example_app` section. Just like Docker this is optional and just like Python this is
 already installed and ready to use in the Docker image.
 
 
