@@ -4,6 +4,11 @@
 Request/response cycle
 ============================
 
+As discussed in the :ref:`intro`, Lazysusan uses a yaml file and the state of the application to
+determine to return a response given a request from the Alexa platform.
+
+The sequence of events upon receiving a request are:
+
 - Look at the current state
 - Grab the matching yaml block for the current state
 - Look at the Intent sent in the request
@@ -15,7 +20,7 @@ Example Request/Response Cycle
 ==============================
 
 In order to explain the request/response cycle, consider the following
-interation for the remainder of this tutorial:
+interaction for the remainder of this tutorial:
 
 ::
 
@@ -25,6 +30,9 @@ interation for the remainder of this tutorial:
     Alexa: For this recipe you will need a non stick frying pan, a ...are you ready to begin?
     u: no
     Alexa: For this recipe you will need a non stick frying pan, a ...are you ready to begin?
+
+A ``states.yml`` file will contain multiple blocks where each block has a unique name and
+corresponds to an Alexa request.
 
 Also consider the following ``states.yml`` definition:
 
@@ -75,20 +83,13 @@ Also consider the following ``states.yml`` definition:
         AMAZON.NoIntent: ingredientsScrambledEggs
         default: goodBye
 
-..  note::
-
-    Every ``states.yml`` file *must* contain an ``initialState`` block which is the entry point to
-    your application
-
-A ``states.yml`` file will contain multiple blocks where each block has a unique name and
-corresponds to an Alexa request.
 
 Incoming Request
 =================
 
-The request/response cycle will always begin with input from the user. Once the
-input is received and assigned an intent, a JSON payload will be sent from the
-Alexa platform to your AWS Lambda function.
+The request/response cycle will always begin with input from the user. By the time your Lambda
+function is executed it will have a specific Intent as determined by the Alexa platform. Lazysusan
+finds the intent for you and will use this to process the request.
 
 
 Examine the Current State
@@ -130,6 +131,12 @@ Additionally, any undefined intents in a given state will be routed to the ``def
 ..  note::
 
     Every response file *must* contain an ``default`` route/branch
+
+..  note::
+
+    Every ``states.yml`` file *must* contain an ``initialState`` block which is the entry point to
+    your application
+
 
 For example, assume we are in ``ingredientsScrambledEggs`` state and the user responds with
 something invalid:

@@ -7,8 +7,8 @@ Introduction
 Lazysusan is a Python framework for authoring Amazon Alexa applications.
 
 At a very high level, Alexa apps are quite simple from a code perspective. The Alexa platform
-sends `json` requests to a publicly accessible endpoint (either an https server or AWS Lambda
-function) and that endpoint responds with a specific `json` response.
+sends ``json`` requests to a publicly accessible endpoint (either an https server or AWS Lambda
+function) and that endpoint responds with a specific ``json`` response.
 
    Lazysusan helps you digest these requests and respond appropriately.
 
