@@ -7,7 +7,7 @@ setup(
         'examples', 'examples.*',
         'tests', 'tests.*',
     ]),
-    version = '0.6',
+    version = '0.7',
     description = 'A library for authoring Alexa apps',
     author='Spartan Systems',
     author_email='sass@joinspartan.com',
