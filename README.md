@@ -1,5 +1,10 @@
 # Lazy Susan
 
+[![CircleCI](https://circleci.com/gh/spartansystems/lazysusan.svg?style=svg)](https://circleci.com/gh/spartansystems/lazysusan)
+[![Code Climate](https://codeclimate.com/repos/5882a6b6df5c471a36003b3f/badges/6b8c732748aebecf1933/gpa.svg)](https://codeclimate.com/repos/5882a6b6df5c471a36003b3f/feed)
+[![Test Coverage](https://codeclimate.com/repos/5882a6b6df5c471a36003b3f/badges/6b8c732748aebecf1933/coverage.svg)](https://codeclimate.com/repos/5882a6b6df5c471a36003b3f/coverage)
+[![Issue Count](https://codeclimate.com/repos/5882a6b6df5c471a36003b3f/badges/6b8c732748aebecf1933/issue_count.svg)](https://codeclimate.com/repos/5882a6b6df5c471a36003b3f/feed)
+
 A framework for quickly building Amazon Alexa applications
 
 ## Development Recommendations
