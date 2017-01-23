@@ -7,27 +7,17 @@ could be used to hit an api and provide the user with custom feedback.
 ## Deploy
 
 ```bash
-$ cd examples/dad_joke
-$ mkdir -p envs/docker
-$ touch envs/docker/dev
-
-edit the dev env file
-
-$ make
-$ make libs
+$ mkdir envs
+$ # create a file named dev in the envs directory with the require environment variables
+$ # see dev.env.example
 $ ENV=dev make shell
+```
 
-inside of docker
+Now you are inside a docker container
 
+```
+$ make libs
 $ make deploy
-```
-
-Sample dev environment file
-```
-AWS_ACCESS_KEY_ID=####################
-AWS_SECRET_ACCESS_KEY=########################################
-AWS_REGION=us-east-1
-DEV_NAME=development
 ```
 
 ## Test on a device
@@ -62,8 +52,3 @@ MyAgeIntent it is {dob}
 
 Once you have everything filled out, you should be able to test on an alexa
 capable device or within the amazon developer portal.
-
-## Modify the output
-
-Edit the `callbacks/__init__.py` module to modify the response that is given to
-the user.
