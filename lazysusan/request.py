@@ -33,4 +33,7 @@ class Request(object):
         return datetime.strptime(self._request["timestamp"], "%Y-%m-%dT%H:%M:%SZ")
 
     def get_slot_value(self, slot_name):
-        return self._request["intent"]["slots"][slot_name]["value"]
+        try:
+            return self._request["intent"]["slots"][slot_name]["value"]
+        except KeyError:
+            pass
