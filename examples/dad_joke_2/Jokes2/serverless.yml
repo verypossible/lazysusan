@@ -14,3 +14,5 @@ package:
 functions:
   jokes2:
     handler: handler.main
+    events:
+      - alexaSkill
