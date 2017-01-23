@@ -35,21 +35,25 @@ DEV_NAME=development
 Inside of the amazon developer portal, create a new skill.
 
 Intents
-```
+
+```json
 {
   "intents": [
     {
       "intent": "MyAgeIntent",
-        "slots": [{
-          "name": "dob",
-          "type": "AMAZON.DATE"
-        }]
+        "slots": [
+            {
+                "name": "dob",
+                "type": "AMAZON.DATE"
+            }
+        ]
     }
   ]
 }
 ```
 
 Sample utterances
+
 ```
 MyAgeIntent my birthday is {dob}
 MyAgeIntent i was born on {dob}

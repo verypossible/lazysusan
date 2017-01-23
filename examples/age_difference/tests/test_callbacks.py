@@ -54,15 +54,29 @@ def test_get_age_from_date_string(dob, now, expected):
 
 
 days_til_bday_data = (
-    # (datetime(1973, 4, 20), datetime(2016, 12, 9), 132),
-    # (datetime(1994, 12, 31), datetime(2017, 1, 1), 364),
-    # (datetime(1994, 12, 31), datetime(2016, 12, 31), ""),
-    # (datetime(1937, 1, 1), datetime(2016, 12, 31), 1),
-    # (datetime(1960, 2, 29), datetime(2015, 3, 1), 365),
-    # (datetime(1960, 2, 29), datetime(2016, 4, 1), 333),
-    (datetime(1960, 2, 29), datetime(2015, 2, 28), 0),
-    # (datetime(2016, 12, 9), 55 ),
-    # (datetime(2017, 3, 1), 55),
+    # random
+    (datetime(1973, 4, 20), datetime(2016, 12, 9), 132),
+    # leap year
+    (datetime(1994, 12, 31), datetime(2016, 1, 1), 365),
+    # regular year
+    (datetime(1994, 12, 31), datetime(2017, 1, 1), 364),
+    # birthday
+    (datetime(1994, 12, 31), datetime(2016, 12, 31), ""),
+    # one day away on borders
+    (datetime(1937, 1, 1), datetime(2016, 12, 31), 1),
+    # thi year not a leap year but next year is
+    (datetime(1960, 2, 29), datetime(2015, 2, 27), 1),
+    (datetime(1960, 2, 29), datetime(2015, 2, 28), ""),
+    (datetime(1960, 2, 29), datetime(2015, 3, 1), 365),
+    # this year is a leap year
+    (datetime(1960, 2, 29), datetime(2016, 2, 27), 2),
+    (datetime(1960, 2, 29), datetime(2016, 2, 28), 1),
+    (datetime(1960, 2, 29), datetime(2016, 2, 29), ""),
+    (datetime(1960, 2, 29), datetime(2016, 3, 1), 364),
+    # this year and next year not leap years
+    (datetime(1960, 2, 29), datetime(2017, 2, 27), 1),
+    (datetime(1960, 2, 29), datetime(2017, 2, 28), ""),
+    (datetime(1960, 2, 29), datetime(2017, 3, 1), 364),
 )
 
 @pytest.mark.parametrize("dob, now, expected", days_til_bday_data)

@@ -24,18 +24,29 @@ def get_age_from_dob(dob, now=None):
     return relativedelta(now, dob)
 
 
-def is_birthday(dob, now):
-    return dob.month == now.month and dob.day == now.day
-
-
 def is_leap_day(date):
     return date.month == 2 and date.day == 29
 
 
 def is_leap_year(year):
+    # allow for passing of datetimes
+    if hasattr(year, 'year'):
+        year = year.year
+
     if (year % 4 == 0 and year % 100 != 0) or year % 400 == 0:
         return True
     return False
+
+
+def is_birthday(dob, now):
+    if not is_leap_day(dob):
+        return dob.month == now.month and dob.day == now.day
+
+    # user's bday is on feb 29
+    if is_leap_year(now):
+        return is_leap_day(now)
+    else:
+        return now.month == 2 and now.day == 28
 
 
 def is_valid_day(dob):
@@ -50,6 +61,38 @@ def is_valid_day(dob):
     return True
 
 
+def _handle_days_until_bday(dob, now):
+    next_bday = datetime(now.year + 1, dob.month or 0, dob.day or 0)
+
+    is_birthday_this_year = True if next_bday - now > YEAR else False
+    if is_birthday_this_year:
+        next_bday = datetime(now.year, dob.month, dob.day)
+
+    delta = next_bday - now
+    return delta.days
+
+
+def _handle_leap_days_until_bday(dob, now):
+    assert is_leap_year(dob.year)
+
+    # See if it's the leap year users bday
+    if (not is_leap_year(now) and now.month == 2 and now.day == 28) or \
+            (is_leap_year(now) and is_leap_day(now)):
+        return 0
+
+    dob_day_this_year = 29 if is_leap_year(now.year) else 28
+    dob_day_next_year = 29 if is_leap_year(now.year + 1) else 28
+
+    next_bday = datetime(now.year + 1, 2, dob_day_next_year)
+
+    is_birthday_this_year = True if next_bday - now > YEAR else False
+    if is_birthday_this_year:
+        next_bday = datetime(now.year, dob.month, dob_day_this_year)
+
+    delta = next_bday - now
+    return delta.days
+
+
 def days_until_birthday(dob, now):
     """Return a string stating the number of days until next birthday.
 
@@ -62,31 +105,13 @@ def days_until_birthday(dob, now):
     if is_birthday(dob, now):
         return ""
 
-
     # be careful b/c leap years need to be handled differently if somone's birthday is on leap day
-    if is_leap_day(dob):
-        assert is_leap_year(dob.year)
-
-        # See if today is the 28th during a non-leap year. If so, it's a birthday
-        if not is_leap_year(now.year) and now.month == 2 and now.day == 28:
-            next_bday = now
-        elif is_leap_year(now.year + 1):
-            next_bday = datetime(now.year + 1, 2, 29)
-        else:
-            next_bday = datetime(now.year + 1, 2, 28)
+    if not is_leap_day(dob):
+        days_to_bday = _handle_days_until_bday(dob, now)
     else:
-        next_bday = datetime(now.year + 1, dob.month or 0, dob.day or 0)
+        days_to_bday = _handle_leap_days_until_bday(dob, now)
 
-    is_birthday_this_year = True if next_bday - now > YEAR else False
-    if is_birthday_this_year:
-        next_bday = datetime(now.year, dob.month, dob.day)
-
-    delta = next_bday - now
-    days_to_bday = delta.days
-    if days_to_bday:
-        return "It's %s days until your next birthday.  " % (days_to_bday, )
-    else:
-        return " "
+    return "It's %s days until your next birthday.  " % (days_to_bday, )
 
 
 def age_breakdown(age):
@@ -149,7 +174,7 @@ def calc_difference(**kwargs):
     if not is_valid_day(dob):
         return "invalidLeapYearDay"
 
-    age = get_age_from_date_string(dob, now)
+    age = get_age_from_dob(dob, now)
 
     # First get a breakdown of how old user is in years, months, days
     msg = age_breakdown(age)
