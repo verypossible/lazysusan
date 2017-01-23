@@ -1,10 +1,10 @@
-NAME = "spartan/spartan-serverless"
+NAME = "joinspartan/serverless:1.4"
 
 ENVDIR=envs
 LIBS_DIR=Age/lib
 
 
-.PHONY:	all build shell bootstrap check-env tests
+.PHONY:	libs shell env-dirs test check-env deploy function
 
 run = docker run --rm -it \
 		-v `pwd`:/code \
@@ -12,11 +12,6 @@ run = docker run --rm -it \
 		--env-file envs/$2 \
 		--name=age-serverless-$(ENV) $(NAME) $1
 
-
-all : build
-
-build :
-	docker build -t $(NAME) .
 
 libs :
 	@test -d $(LIBS_DIR) || mkdir -p $(LIBS_DIR)

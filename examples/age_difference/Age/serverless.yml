@@ -40,3 +40,5 @@ package:
 functions:
   age:
     handler: handler.main
+    events:
+      - alexaSkill
