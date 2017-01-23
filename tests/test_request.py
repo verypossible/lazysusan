@@ -66,3 +66,8 @@ def test_launch_request_type(launch_request):
 def test_get_slot_value(alexa_request):
     new_request = Request(alexa_request)
     assert new_request.get_slot_value("WhatSlot") == "ThisSlot"
+
+
+def test_get_slot_value_missing(alexa_request):
+    new_request = Request(alexa_request)
+    assert new_request.get_slot_value("baz") is None
