@@ -19,7 +19,7 @@ libs :
 	pip install -t $(LIBS_DIR) PyYAML
 	@test -f $(LIBS_DIR)/_yaml.so && rm $(LIBS_DIR)/_yaml.so
 	pip install -t $(LIBS_DIR) python-dateutil
-	pip install -t $(LIBS_DIR) --no-deps -U git+https://github.com/spartansystems/lazysusan.git
+	pip install -t $(LIBS_DIR) --no-deps -U git+https://github.com/spartansystems/lazysusan.git@example/agecalc#egg=lazysusan
 
 shell : check-env env-dirs
 	$(call run,bash,$(ENV))

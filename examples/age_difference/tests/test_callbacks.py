@@ -77,6 +77,8 @@ days_til_bday_data = (
     (datetime(1960, 2, 29), datetime(2017, 2, 27), 1),
     (datetime(1960, 2, 29), datetime(2017, 2, 28), ""),
     (datetime(1960, 2, 29), datetime(2017, 3, 1), 364),
+
+    (datetime(2017, 1, 24), datetime(2017, 1, 23), 1),
 )
 
 @pytest.mark.parametrize("dob, now, expected", days_til_bday_data)

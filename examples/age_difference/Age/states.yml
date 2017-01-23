@@ -16,12 +16,25 @@ initialState:
     default: goodBye
 
 
-invalidLeapYearDay:
+missingYear:
   response:
     outputSpeech:
       type: PlainText
-      text: That day is invalid. If you were born on February 29th you must be born in a leap year. Please try again.
+      text: Please say what day, month and year you were born.
     shouldEndSession: True
+  branches:
+    <<: *initialStateBranches
+    LaunchRequest: initialState
+
+
+invalidDate:
+  response:
+    outputSpeech:
+      type: PlainText
+      text: >
+        I did not understand that birthday. Please try again.
+        Please say what day, month and year you were born.
+    shouldEndSession: False
   branches:
     <<: *initialStateBranches
     LaunchRequest: initialState

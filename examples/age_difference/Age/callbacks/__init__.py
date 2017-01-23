@@ -4,10 +4,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from lazysusan.logger import get_logger
-from lazysusan.helpers import (
-    build_response,
-    get_slot_value,
-)
+from lazysusan.helpers import build_response
 from lazysusan.response import build_response_payload
 
 
@@ -16,7 +13,10 @@ YEAR = timedelta(days=365)
 
 
 def get_dob_from_date_string(date_string):
-    return datetime.strptime(date_string, "%Y-%m-%d")
+    try:
+        return datetime.strptime(date_string, "%Y-%m-%d")
+    except ValueError:
+        return None
 
 
 def get_age_from_dob(dob, now=None):
@@ -55,6 +55,9 @@ def is_valid_day(dob):
     Mainly checks whether a leap day is valid for a given year. Ie, Feb 29, 1997 isn't a valid day.
 
     """
+    if not dob:
+        return False
+
     if dob.month == 2 and dob.day == 29:
         return is_leap_year(dob.year)
 
@@ -163,16 +166,19 @@ def calc_difference(**kwargs):
     state_machine = kwargs["state_machine"]
     log = get_logger()
 
-    date_string = get_slot_value(request, "dob")
+    date_string = request.get_slot_value("dob")
     if not date_string:
         log.error("Could not find date in slots")
         return "goodBye"
+
+    if date_string.startswith('XXXX-'):
+        return "missingYear"
 
     now = datetime.now()
 
     dob = get_dob_from_date_string(date_string)
     if not is_valid_day(dob):
-        return "invalidLeapYearDay"
+        return "invalidDate"
 
     age = get_age_from_dob(dob, now)
 
