@@ -15,37 +15,6 @@ DOB_KEY = "LAST_DOB"
 YEAR = timedelta(days=365)
 
 
-def calc_difference(**kwargs):
-    request = kwargs["request"]
-    session = kwargs["session"]
-    state_machine = kwargs["state_machine"]
-    log = get_logger()
-
-    date_string = get_slot_value(request, "dob")
-    if not date_string:
-        log.error("Could  not find date in slots")
-        return "goodBye"
-
-    now = datetime.now()
-
-    dob = get_dob_from_date_string(date_string)
-    age = get_age_from_date_string(dob, now)
-
-    # First get a breakdown of how old user is in years, months, days
-    msg = age_breakdown(age)
-
-    # next figure out the days until the users next birthday
-    msg += "%s" % (days_until_birthday(dob, now), )
-
-    # finally add whether we're older or younger than the last user
-    msg += "%s" % (last_user_difference(session, dob), )
-
-    session.set(DOB_KEY, dob.toordinal())
-
-    response_dict = build_response("ageResponse", msg, state_machine)
-    return build_response_payload(response_dict, session.get_state_params())
-
-
 def get_dob_from_date_string(date_string):
     return datetime.strptime(date_string, "%Y-%m-%d")
 
@@ -54,8 +23,31 @@ def get_age_from_dob(dob, now=None):
     now = now or datetime.now()
     return relativedelta(now, dob)
 
+
 def is_birthday(dob, now):
     return dob.month == now.month and dob.day == now.day
+
+
+def is_leap_day(date):
+    return date.month == 2 and date.day == 29
+
+
+def is_leap_year(year):
+    if (year % 4 == 0 and year % 100 != 0) or year % 400 == 0:
+        return True
+    return False
+
+
+def is_valid_day(dob):
+    """Validate whether a given day is valid
+
+    Mainly checks whether a leap day is valid for a given year. Ie, Feb 29, 1997 isn't a valid day.
+
+    """
+    if dob.month == 2 and dob.day == 29:
+        return is_leap_year(dob.year)
+
+    return True
 
 
 def days_until_birthday(dob, now):
@@ -70,9 +62,22 @@ def days_until_birthday(dob, now):
     if is_birthday(dob, now):
         return ""
 
-    next_bday = datetime(now.year + 1, dob.month or 0, dob.day or 0)
 
-    is_birthday_this_year = True if next_bday - now >= YEAR else False
+    # be careful b/c leap years need to be handled differently if somone's birthday is on leap day
+    if is_leap_day(dob):
+        assert is_leap_year(dob.year)
+
+        # See if today is the 28th during a non-leap year. If so, it's a birthday
+        if not is_leap_year(now.year) and now.month == 2 and now.day == 28:
+            next_bday = now
+        elif is_leap_year(now.year + 1):
+            next_bday = datetime(now.year + 1, 2, 29)
+        else:
+            next_bday = datetime(now.year + 1, 2, 28)
+    else:
+        next_bday = datetime(now.year + 1, dob.month or 0, dob.day or 0)
+
+    is_birthday_this_year = True if next_bday - now > YEAR else False
     if is_birthday_this_year:
         next_bday = datetime(now.year, dob.month, dob.day)
 
@@ -125,3 +130,37 @@ def last_user_difference(session, dob):
                 diff.years, diff.months, diff.days, old_or_younger)
 
     return "You have the same birthday as the last user."
+
+
+def calc_difference(**kwargs):
+    request = kwargs["request"]
+    session = kwargs["session"]
+    state_machine = kwargs["state_machine"]
+    log = get_logger()
+
+    date_string = get_slot_value(request, "dob")
+    if not date_string:
+        log.error("Could not find date in slots")
+        return "goodBye"
+
+    now = datetime.now()
+
+    dob = get_dob_from_date_string(date_string)
+    if not is_valid_day(dob):
+        return "invalidLeapYearDay"
+
+    age = get_age_from_date_string(dob, now)
+
+    # First get a breakdown of how old user is in years, months, days
+    msg = age_breakdown(age)
+
+    # next figure out the days until the users next birthday
+    msg += "%s" % (days_until_birthday(dob, now), )
+
+    # finally add whether we're older or younger than the last user
+    msg += "%s" % (last_user_difference(session, dob), )
+
+    session.set(DOB_KEY, dob.toordinal())
+
+    response_dict = build_response("ageResponse", msg, state_machine)
+    return build_response_payload(response_dict, session.get_state_params())

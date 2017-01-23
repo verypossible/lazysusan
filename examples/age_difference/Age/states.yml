@@ -15,6 +15,17 @@ initialState:
     MyAgeIntent: !!python/name:callbacks.calc_difference
     default: goodBye
 
+
+invalidLeapYearDay:
+  response:
+    outputSpeech:
+      type: PlainText
+      text: That day is invalid. If you were born on February 29th you must be born in a leap year. Please try again.
+    shouldEndSession: True
+  branches:
+    <<: *initialStateBranches
+    LaunchRequest: initialState
+
 ageResponse:
   response:
     outputSpeech:
