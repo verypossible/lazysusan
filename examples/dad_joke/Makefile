@@ -1,10 +1,10 @@
-NAME = "spartan/jokes-serverless"
+NAME = "joinspartan/serverless:1.4"
 
 ENVDIR=envs
 LIBS_DIR=Jokes/lib
 
 
-.PHONY:	all build shell bootstrap check-env tests
+.PHONY:	libs shell env-dirs check-env tests deploy function
 
 run = docker run --rm -it \
 		-v `pwd`:/code \
